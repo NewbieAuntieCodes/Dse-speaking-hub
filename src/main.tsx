@@ -4,7 +4,7 @@
 */
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import DseSpeakingHubApp from './src/components/App';
+import DseSpeakingHubApp from './components/App';
 import '../index.css';
 
 // --- Rendering Logic for standalone preview ---

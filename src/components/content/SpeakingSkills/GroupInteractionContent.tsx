@@ -9,6 +9,7 @@ import { DragAndDropExercise } from '../../practice/DragAndDropExercise';
 import { RoleplayExercise } from '../../practice/RoleplayExercise';
 import { NavigatorContainer, NavigatorTab } from '../../practice/RoleplayExercise.styles';
 import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '../Structures/StructuresContent.styles';
+import { ConcludingTechniquesContent } from './ConcludingTechniquesContent';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -464,7 +465,7 @@ interface GroupInteractionContentProps {
 
 // --- Main Component (now a router) ---
 export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = ({ onBack, themeColor }) => {
-    const [view, setView] = useState<'list' | 'opening' | 'pre'>('list');
+    const [view, setView] = useState<'list' | 'opening' | 'pre' | 'concluding'>('list');
 
     if (view === 'opening') {
         return <OpeningMethodContent onBack={() => setView('list')} themeColor={themeColor} />;
@@ -472,6 +473,10 @@ export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = (
 
     if (view === 'pre') {
         return <PreStructureContent onBack={() => setView('list')} themeColor={themeColor} />;
+    }
+
+    if (view === 'concluding') {
+        return <ConcludingTechniquesContent onBack={() => setView('list')} themeColor={themeColor} />;
     }
     
     return (
@@ -487,9 +492,9 @@ export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = (
                     <LessonTitleChinese>PRE 万能结构</LessonTitleChinese>
                     <LessonTitleEnglish>The PRE Structure</LessonTitleEnglish>
                 </LessonItem>
-                <LessonItem borderColor="#cccccc" style={{ cursor: 'not-allowed', opacity: 0.6 }}>
+                <LessonItem borderColor={themeColor} onClick={() => setView('concluding')}>
                     <LessonTitleChinese>总结结尾技巧</LessonTitleChinese>
-                    <LessonTitleEnglish>Concluding Techniques (Coming Soon)</LessonTitleEnglish>
+                    <LessonTitleEnglish>Concluding Techniques</LessonTitleEnglish>
                 </LessonItem>
             </LessonList>
         </Container>
