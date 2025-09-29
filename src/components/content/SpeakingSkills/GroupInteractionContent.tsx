@@ -4,12 +4,14 @@
 */
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BackButton, LessonTitle } from '../Structures/SVOContent.styles';
+import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 import { DragAndDropExercise } from '../../practice/DragAndDropExercise';
 import { RoleplayExercise } from '../../practice/RoleplayExercise';
 import { NavigatorContainer, NavigatorTab } from '../../practice/RoleplayExercise.styles';
 import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '../Structures/StructuresContent.styles';
 import { ConcludingTechniquesContent } from './ConcludingTechniquesContent';
+import { ExampleGroupInteractionContent } from './ExampleGroupInteractionContent';
+import { QuestionTypesContent } from './QuestionTypesContent';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -131,22 +133,28 @@ const AudioIntroContainer = styled.div`
 `;
 
 const AudioButton = styled.a<{ themeColor: string }>`
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     background-color: ${props => props.themeColor || '#4a90e2'};
     color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 1em;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
     &:hover {
-        transform: scale(1.05);
+        transform: translateY(-2px);
         filter: brightness(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    span[role="img"] {
+        font-size: 1.1em;
     }
 `;
 
@@ -234,13 +242,17 @@ const ExamplePrompt = styled.div<{ themeColor: string }>`
 
 // --- Practice Navigator Component ---
 interface PracticeNavigatorProps {
-    practice1: React.ReactNode;
+    practice1: (onComplete: () => void) => React.ReactNode;
     practice2: React.ReactNode;
     themeColor: string;
 }
 
 const PracticeNavigator: React.FC<PracticeNavigatorProps> = ({ practice1, practice2, themeColor }) => {
     const [activeTab, setActiveTab] = useState<'practice1' | 'practice2'>('practice1');
+    
+    const handlePractice1Complete = () => {
+        setActiveTab('practice2');
+    };
 
     return (
         <div style={{ textAlign: 'center' }}>
@@ -263,7 +275,7 @@ const PracticeNavigator: React.FC<PracticeNavigatorProps> = ({ practice1, practi
                 </NavigatorTab>
             </NavigatorContainer>
             <>
-                {activeTab === 'practice1' && practice1}
+                {activeTab === 'practice1' && practice1(handlePractice1Complete)}
                 {activeTab === 'practice2' && practice2}
             </>
         </div>
@@ -271,7 +283,7 @@ const PracticeNavigator: React.FC<PracticeNavigatorProps> = ({ practice1, practi
 };
 
 // --- Child Component for Opening Method ---
-const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }> = ({ onBack, themeColor }) => {
+const OpeningMethodContent: React.FC<{ onBack: () => void; onNext: () => void; themeColor: string }> = ({ onBack, onNext, themeColor }) => {
     return (
         <Container>
             <BackButton onClick={onBack} themeColor={themeColor}>← Back to Group Interaction Skills</BackButton>
@@ -288,8 +300,8 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }>
                 <StepFlowContainer>
                     <StepCard themeColor={themeColor}>
                         <StepNumber themeColor={themeColor}>1</StepNumber>
-                        <StepTitle>问好破冰</StepTitle>
-                        <StepDescription>Greeting & Kick-off</StepDescription>
+                        <StepTitle>问好</StepTitle>
+                        <StepDescription>Greeting</StepDescription>
                     </StepCard>
                     <StepArrow>→</StepArrow>
                      <StepCard themeColor={themeColor}>
@@ -304,7 +316,10 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }>
                         <StepDescription>Invite Discussion</StepDescription>
                     </StepCard>
                 </StepFlowContainer>
-                <h4 style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#2c3e50', marginTop: '40px', marginBottom: '20px' }}>范例分析 (Example Analysis)</h4>
+                <SectionTitle themeColor={themeColor} style={{ marginTop: '50px' }}>
+                    <span className="icon" style={{color: '#9013fe'}}>🗣️</span>
+                    范例分析 (Example Analysis)
+                </SectionTitle>
                  <AudioIntroContainer>
                     <span>These students are discussing the pros and cons of attending tutorial classes. Look at how they organize their first speaking turns:</span>
                     <AudioButton 
@@ -313,14 +328,14 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }>
                         rel="noopener noreferrer"
                         themeColor={themeColor}
                     >
-                        <span role="img" aria-label="audio">🔊</span> Listen
+                        <span role="img" aria-label="audio">🔈</span> Listen
                     </AudioButton>
                 </AudioIntroContainer>
                 <ExampleAnalysisContainer>
                     <ExampleBubble>
                         <ExampleHeader>考生 A (Student A)</ExampleHeader>
                         <ExamplePart color="#3498db">
-                            <span className="part-title">① 问好破冰 (Greeting & Kick-off)</span>
+                            <span className="part-title">① 问好 (Greeting)</span>
                             <span className="part-content">Hello, everybody. It's good to be here. Let's get started.</span>
                         </ExamplePart>
                         <ExamplePart color="#2ecc71">
@@ -336,7 +351,7 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }>
                      <ExampleBubble>
                         <ExampleHeader>考生 B (Student B)</ExampleHeader>
                         <ExamplePart color="#3498db">
-                             <span className="part-title">① 问好破冰 (Greeting & Kick-off)</span>
+                             <span className="part-title">① 问好 (Greeting)</span>
                             <span className="part-content">Good afternoon, nice to meet you all. Let's begin our discussion.</span>
                         </ExamplePart>
                         <ExamplePart color="#2ecc71">
@@ -361,16 +376,22 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; themeColor: string }>
                 </p>
                 <PracticeNavigator 
                     themeColor={themeColor}
-                    practice1={<DragAndDropExercise themeColor={themeColor} />}
+                    practice1={(onComplete) => <DragAndDropExercise onComplete={onComplete} themeColor={themeColor} />}
                     practice2={<RoleplayExercise themeColor={themeColor} />}
                 />
             </SectionWrapper>
+            <NextButtonContainer>
+                <NextButton onClick={onNext} themeColor={themeColor}>
+                    <span>Next: The PRE Structure</span>
+                    <span className="arrow">→</span>
+                </NextButton>
+            </NextButtonContainer>
         </Container>
     );
 };
 
 // --- Child Component for PRE Structure ---
-const PreStructureContent: React.FC<{ onBack: () => void; themeColor: string }> = ({ onBack, themeColor }) => {
+const PreStructureContent: React.FC<{ onBack: () => void; onNext: () => void; themeColor: string }> = ({ onBack, onNext, themeColor }) => {
     return (
         <Container>
             <BackButton onClick={onBack} themeColor={themeColor}>← Back to Group Interaction Skills</BackButton>
@@ -414,7 +435,10 @@ const PreStructureContent: React.FC<{ onBack: () => void; themeColor: string }> 
                     </StepCard>
                 </StepFlowContainer>
 
-                <h4 style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#2c3e50', marginTop: '40px', marginBottom: '20px' }}>范例分析 (Example Analysis)</h4>
+                <SectionTitle themeColor={themeColor} style={{ marginTop: '50px' }}>
+                    <span className="icon" style={{color: '#9013fe'}}>🗣️</span>
+                    范例分析 (Example Analysis)
+                </SectionTitle>
                 <ExamplePrompt themeColor={themeColor}>
                     <span className="icon" role="img" aria-label="question icon">❓</span>
                     <span>
@@ -454,34 +478,51 @@ const PreStructureContent: React.FC<{ onBack: () => void; themeColor: string }> 
                     </ExampleBubble>
                 </ExampleAnalysisContainer>
             </SectionWrapper>
+            <NextButtonContainer>
+                <NextButton onClick={onNext} themeColor={themeColor}>
+                    <span>Next: Concluding Techniques</span>
+                    <span className="arrow">→</span>
+                </NextButton>
+            </NextButtonContainer>
         </Container>
     );
 };
 
 interface GroupInteractionContentProps {
     onBack: () => void;
+    onNext: () => void;
     themeColor: string;
 }
 
+type View = 'list' | 'opening' | 'pre' | 'questionTypes' | 'concluding' | 'example';
+
 // --- Main Component (now a router) ---
-export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = ({ onBack, themeColor }) => {
-    const [view, setView] = useState<'list' | 'opening' | 'pre' | 'concluding'>('list');
+export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = ({ onBack, onNext, themeColor }) => {
+    const [view, setView] = useState<View>('list');
 
     if (view === 'opening') {
-        return <OpeningMethodContent onBack={() => setView('list')} themeColor={themeColor} />;
+        return <OpeningMethodContent onBack={() => setView('list')} onNext={() => setView('pre')} themeColor={themeColor} />;
     }
 
     if (view === 'pre') {
-        return <PreStructureContent onBack={() => setView('list')} themeColor={themeColor} />;
+        return <PreStructureContent onBack={() => setView('list')} onNext={() => setView('concluding')} themeColor={themeColor} />;
     }
 
     if (view === 'concluding') {
-        return <ConcludingTechniquesContent onBack={() => setView('list')} themeColor={themeColor} />;
+        return <ConcludingTechniquesContent onBack={() => setView('list')} onNext={() => setView('example')} themeColor={themeColor} />;
+    }
+
+    if (view === 'example') {
+        return <ExampleGroupInteractionContent onBack={() => setView('list')} onNext={() => setView('questionTypes')} themeColor={themeColor} />;
+    }
+
+    if (view === 'questionTypes') {
+        return <QuestionTypesContent onBack={() => setView('list')} onNext={onNext} themeColor={themeColor} />;
     }
     
     return (
         <Container>
-            <BackButton onClick={onBack} themeColor={themeColor}>← Back to Answering Skills</BackButton>
+            <BackButton onClick={onBack} themeColor={themeColor}>← Back to Skills Menu</BackButton>
             <LessonTitle>小组讨论技巧 (Group Interaction)</LessonTitle>
             <LessonList>
                 <LessonItem borderColor={themeColor} onClick={() => setView('opening')}>
@@ -496,7 +537,21 @@ export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = (
                     <LessonTitleChinese>总结结尾技巧</LessonTitleChinese>
                     <LessonTitleEnglish>Concluding Techniques</LessonTitleEnglish>
                 </LessonItem>
+                <LessonItem borderColor={themeColor} onClick={() => setView('example')}>
+                    <LessonTitleChinese>小组讨论实例</LessonTitleChinese>
+                    <LessonTitleEnglish>Example Group Interaction</LessonTitleEnglish>
+                </LessonItem>
+                <LessonItem borderColor={themeColor} onClick={() => setView('questionTypes')}>
+                    <LessonTitleChinese>5大题型</LessonTitleChinese>
+                    <LessonTitleEnglish>5 Major Question Types</LessonTitleEnglish>
+                </LessonItem>
             </LessonList>
+            <NextButtonContainer>
+                <NextButton onClick={onNext} themeColor={themeColor}>
+                    <span>Next: Individual Response Skills</span>
+                    <span className="arrow">→</span>
+                </NextButton>
+            </NextButtonContainer>
         </Container>
     );
 };

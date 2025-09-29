@@ -4,7 +4,7 @@
 */
 import React from 'react';
 import styled from 'styled-components';
-import { BackButton, LessonTitle } from '../Structures/SVOContent.styles';
+import { BackButton, LessonTitle, NextButtonContainer, NextButton } from '../Structures/SVOContent.styles';
 
 const PlaceholderCard = styled.div`
     background: white;
@@ -23,17 +23,24 @@ const PlaceholderText = styled.p`
 
 interface IndividualResponseContentProps {
     onBack: () => void;
+    onReturn: () => void;
     themeColor: string;
 }
 
-export const IndividualResponseContent: React.FC<IndividualResponseContentProps> = ({ onBack, themeColor }) => {
+export const IndividualResponseContent: React.FC<IndividualResponseContentProps> = ({ onBack, onReturn, themeColor }) => {
     return (
         <div>
-            <BackButton onClick={onBack} themeColor={themeColor}>← Back to Answering Skills</BackButton>
+            <BackButton onClick={onBack} themeColor={themeColor}>← Back to Skills Menu</BackButton>
             <LessonTitle>个人回应技巧 (Individual Response)</LessonTitle>
             <PlaceholderCard>
                 <PlaceholderText>Content for individual response skills coming soon!</PlaceholderText>
             </PlaceholderCard>
+            <NextButtonContainer>
+                <NextButton onClick={onReturn} themeColor={themeColor}>
+                    <span>Return to Skills Menu</span>
+                    <span className="arrow">↩</span>
+                </NextButton>
+            </NextButtonContainer>
         </div>
     );
 };

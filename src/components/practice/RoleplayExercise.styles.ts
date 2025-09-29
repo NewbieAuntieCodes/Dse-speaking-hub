@@ -41,6 +41,16 @@ const fadeIn = keyframes`
   to { opacity: 1; transform: translateY(0); }
 `;
 
+// --- New Styled Component ---
+export const HighlightText = styled.span<{ color: string }>`
+    color: ${props => props.color};
+    font-weight: bold;
+    background-color: ${props => props.color}1a;
+    padding: 2px 5px;
+    border-radius: 4px;
+`;
+
+
 // --- Styled Components ---
 
 export const ExerciseContainer = styled.div`
@@ -208,24 +218,27 @@ export const AudioLink = styled.a<{ themeColor: string }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background-color: #f8f9fa;
-    color: #566573;
-    padding: 10px 15px;
-    border-radius: 10px;
+    gap: 12px;
+    background: linear-gradient(45deg, ${props => props.themeColor}, ${props => props.themeColor + 'd0'});
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.95em;
+    font-size: 1.05em;
     transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
-    margin-bottom: 20px;
+    border: none;
+    margin: 0 auto 25px auto;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 
     &:hover {
-        border-color: ${props => props.themeColor};
-        color: ${props => props.themeColor};
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
 
     span[role="img"] {
-        color: ${props => props.themeColor};
+        font-size: 1.1em;
+        transition: transform 0.3s ease;
     }
 `;

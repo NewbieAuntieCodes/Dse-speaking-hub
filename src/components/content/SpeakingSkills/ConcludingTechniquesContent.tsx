@@ -4,7 +4,7 @@
 */
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BackButton, LessonTitle } from '../Structures/SVOContent.styles';
+import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -126,63 +126,33 @@ const ExampleBubble = styled.div`
     position: relative;
 `;
 
-// Fix: Replaced inconsistent `theme` prop with a standard `highlightColor` prop to resolve TypeScript error and improve consistency.
-const DialoguePoint = styled.div<{ highlightColor?: string }>`
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 15px;
-    color: #4a5568;
-    line-height: 1.7;
+const ExampleHeader = styled.h5`
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 20px;
+`;
 
+const ExamplePart = styled.div<{ color: string }>`
+    margin-bottom: 15px;
+    padding-left: 20px;
+    border-left: 3px solid ${props => props.color};
+    
     &:last-child {
         margin-bottom: 0;
     }
 
-    u {
-        text-decoration-color: ${props => props.highlightColor || '#4a90e2'};
-        text-decoration-thickness: 2px;
-        text-underline-offset: 3px;
-    }
-`;
-
-const DialogueNumber = styled.span<{ themeColor: string }>`
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: ${props => props.themeColor};
-    color: white;
-    font-weight: bold;
-    font-size: 0.9em;
-    flex-shrink: 0;
-    margin-top: 4px;
-`;
-
-const InfoBox = styled.div`
-    display: flex;
-    gap: 15px;
-    background: #e7f5ff;
-    border-left: 5px solid #339af0;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0 30px 0;
-`;
-
-const InfoIcon = styled.div`
-    font-size: 1.8em;
-    flex-shrink: 0;
-`;
-
-const InfoText = styled.p`
-    color: #1864ab;
-    line-height: 1.6;
-
-    strong {
+    .part-title {
         font-weight: bold;
-        color: #1971c2;
+        color: ${props => props.color};
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    .part-content {
+        color: #566573;
+        line-height: 1.6;
     }
 `;
 
@@ -205,24 +175,28 @@ const AudioIntroContainer = styled.div`
 `;
 
 const AudioButton = styled.a<{ themeColor: string }>`
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     background-color: ${props => props.themeColor || '#4a90e2'};
     color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 1em;
     transition: all 0.3s ease;
     flex-shrink: 0;
-    cursor: not-allowed;
-    opacity: 0.7;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
     &:hover {
-        transform: scale(1.05);
+        transform: translateY(-2px);
         filter: brightness(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    span[role="img"] {
+        font-size: 1.1em;
     }
 `;
 
@@ -231,10 +205,11 @@ const AudioButton = styled.a<{ themeColor: string }>`
 
 interface ConcludingTechniquesContentProps {
     onBack: () => void;
+    onNext: () => void;
     themeColor: string;
 }
 
-export const ConcludingTechniquesContent: React.FC<ConcludingTechniquesContentProps> = ({ onBack, themeColor }) => {
+export const ConcludingTechniquesContent: React.FC<ConcludingTechniquesContentProps> = ({ onBack, onNext, themeColor }) => {
     return (
         <Container>
             <BackButton onClick={onBack} themeColor={themeColor}>← Back to Group Interaction Skills</BackButton>
@@ -243,85 +218,89 @@ export const ConcludingTechniquesContent: React.FC<ConcludingTechniquesContentPr
             <SectionWrapper>
                 <SectionTitle themeColor={themeColor}>
                     <span className="icon">🏁</span>
-                    The 3 Steps to a Strong Conclusion
+                    总结结尾三步法 (The 3 Steps to a Strong Conclusion)
                 </SectionTitle>
                 <p style={{ color: '#566573', lineHeight: 1.7 }}>
-                    A good conclusion leaves a strong final impression. Pay attention to the following when ending a discussion:
+                    一个好的结尾能给人留下深刻的最终印象。在结束讨论时，请注意以下几点：
                 </p>
                 <StepFlowContainer>
                     <StepCard themeColor={themeColor}>
                         <StepNumber themeColor={themeColor}>1</StepNumber>
-                        <StepTitle>Summarizing the main points</StepTitle>
+                        <StepTitle>总结要点</StepTitle>
+                        <StepDescription>Summarizing the main points</StepDescription>
                     </StepCard>
                     <StepArrow>→</StepArrow>
                      <StepCard themeColor={themeColor}>
                         <StepNumber themeColor={themeColor}>2</StepNumber>
-                        <StepTitle>Concluding the discussion</StepTitle>
-                        <StepDescription>(checking if anyone wants to say anything else)</StepDescription>
+                        <StepTitle>结束讨论</StepTitle>
+                        <StepDescription>Concluding the discussion</StepDescription>
                     </StepCard>
                     <StepArrow>→</StepArrow>
                      <StepCard themeColor={themeColor}>
                         <StepNumber themeColor={themeColor}>3</StepNumber>
-                        <StepTitle>Thanking others</StepTitle>
+                        <StepTitle>感谢组员</StepTitle>
+                        <StepDescription>Thanking others</StepDescription>
                     </StepCard>
                 </StepFlowContainer>
             </SectionWrapper>
             
             <SectionWrapper>
                 <SectionTitle themeColor={themeColor}>
-                    <span className="icon">🗣️</span>
+                    <span className="icon" style={{color: '#9013fe'}}>🗣️</span>
                     范例分析 (Example Analysis)
                 </SectionTitle>
                 <AudioIntroContainer>
                     <span>Look at how these students end a discussion on ways to balance study and play:</span>
                     <AudioButton 
+                        href="https://players.brightcove.net/6144772950001/default_default/index.html?videoId=6268728665001"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         themeColor={themeColor}
-                        onClick={(e) => e.preventDefault()}
-                        title="Listening feature coming soon!"
                     >
-                        <span role="img" aria-label="audio">🔊</span> Listen (Coming soon)
+                        <span role="img" aria-label="audio">🔈</span> Listen
                     </AudioButton>
                 </AudioIntroContainer>
 
-                 <InfoBox>
-                    <InfoIcon>🔍</InfoIcon>
-                    <InfoText>
-                        If a discussion is <strong>fruitful</strong>, it means it has produced many useful results.
-                    </InfoText>
-                </InfoBox>
-
                 <ExampleAnalysisContainer>
                     <ExampleBubble>
-                        <DialoguePoint highlightColor={themeColor}>
-                            <DialogueNumber themeColor={themeColor}>1</DialogueNumber>
-                            <span>Let's <u>sum up our discussion</u>. It's important to find balance between study and play. You can do that by <u>staying organized, managing your time and planning your week carefully</u>.</span>
-                        </DialoguePoint>
-                         <DialoguePoint>
-                            <DialogueNumber themeColor={themeColor}>2</DialogueNumber>
-                            <span>Does anyone have anything else to say? If not, I shall end this discussion here.</span>
-                        </DialoguePoint>
-                         <DialoguePoint>
-                            <DialogueNumber themeColor={themeColor}>3</DialogueNumber>
-                            <span>Thank you all for your contributions.</span>
-                        </DialoguePoint>
+                        <ExampleHeader>考生示范 1 (Student Example 1)</ExampleHeader>
+                        <ExamplePart color="#3498db">
+                            <span className="part-title">① 总结要点 (Summarizing the main points)</span>
+                            <span className="part-content">Let's sum up our discussion. It's important to find balance between study and play. You can do that by staying organized, managing your time and planning your week carefully.</span>
+                        </ExamplePart>
+                        <ExamplePart color="#2ecc71">
+                            <span className="part-title">② 结束讨论 (Concluding the discussion)</span>
+                            <span className="part-content">Does anyone have anything else to say? If not, I shall end this discussion here.</span>
+                        </ExamplePart>
+                        <ExamplePart color="#e67e22">
+                            <span className="part-title">③ 感谢组员 (Thanking others)</span>
+                            <span className="part-content">Thank you all for your contributions.</span>
+                        </ExamplePart>
                     </ExampleBubble>
 
                     <ExampleBubble>
-                         <DialoguePoint highlightColor={themeColor}>
-                            <DialogueNumber themeColor={themeColor}>1</DialogueNumber>
-                            <span><u>In summary</u>, there are different ways of balancing study and play. Some of us like to <u>make weekly to-do lists</u>, while others prefer <u>setting time limits</u> for all their activities.</span>
-                        </DialoguePoint>
-                         <DialoguePoint highlightColor={themeColor}>
-                            <DialogueNumber themeColor={themeColor}>2</DialogueNumber>
-                            <span><u>Since we have all come to an agreement</u> that striking a balance between study and play is important, we shall stop here.</span>
-                        </DialoguePoint>
-                         <DialoguePoint>
-                            <DialogueNumber themeColor={themeColor}>3</DialogueNumber>
-                            <span>It's been a fruitful and interesting discussion. Thank you very much.</span>
-                        </DialoguePoint>
+                        <ExampleHeader>考生示范 2 (Student Example 2)</ExampleHeader>
+                        <ExamplePart color="#3498db">
+                            <span className="part-title">① 总结要点 (Summarizing the main points)</span>
+                            <span className="part-content">In summary, there are different ways of balancing study and play. Some of us like to make weekly to-do lists, while others prefer setting time limits for all their activities.</span>
+                        </ExamplePart>
+                        <ExamplePart color="#2ecc71">
+                            <span className="part-title">② 结束讨论 (Concluding the discussion)</span>
+                            <span className="part-content">Since we have all come to an agreement that striking a balance between study and play is important, we shall stop here.</span>
+                        </ExamplePart>
+                        <ExamplePart color="#e67e22">
+                            <span className="part-title">③ 感谢组员 (Thanking others)</span>
+                            <span className="part-content">It's been a fruitful and interesting discussion. Thank you very much.</span>
+                        </ExamplePart>
                     </ExampleBubble>
                 </ExampleAnalysisContainer>
             </SectionWrapper>
+            <NextButtonContainer>
+                <NextButton onClick={onNext} themeColor={themeColor}>
+                    <span>Next: Example Group Interaction</span>
+                    <span className="arrow">→</span>
+                </NextButton>
+            </NextButtonContainer>
         </Container>
     );
 };

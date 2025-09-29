@@ -15,6 +15,7 @@ import {
     Answer,
     ButtonContainer,
     CheckButton,
+    HighlightText,
 } from './RoleplayExercise.styles';
 
 
@@ -22,22 +23,22 @@ interface RoleplayExerciseProps {
     themeColor: string;
 }
 
-// --- New Data ---
+// --- Updated Data ---
 const conversionQuestions = [
     {
         id: 1,
         question: 'How can you improve your memory power while studying for exams?',
-        answer: 'Let\'s talk about how you can improve your memory power while studying for exams.',
+        answer: 'We are here to discuss how you can improve your memory power while studying for exams.',
     },
     {
         id: 2,
         question: 'Can listening to music help you focus while studying?',
-        answer: 'Today, we can discuss whether listening to music can help you focus while studying.',
+        answer: "We've been asked to discuss whether listening to music can help you focus while studying.",
     },
     {
         id: 3,
         question: 'Does memorization help improve English literacy?',
-        answer: 'We are here to explore if memorization helps improve English literacy.',
+        answer: 'Our goal is to determine whether memorization helps improve English literacy.',
     },
 ];
 
@@ -49,10 +50,10 @@ export const RoleplayExercise: React.FC<RoleplayExerciseProps> = ({ themeColor }
         <ExerciseContainer>
             <Instruction>
                 <p>
-                    在DSE口语考试中，大部分情况下，阅读材料里的讨论要点会以陈述句 (declarative statements) 的形式出现。
+                    在DSE口语考试中，大部分情况下，阅读材料里的讨论要点会以<HighlightText color="#3498db">陈述句 (declarative statements)</HighlightText> 的形式出现。
                 </p>
                 <p>
-                    然而，在少数情况下，它们也可能以问句 (questions) 的形式提问。当遇到这种情况时，我们需要将问句转换为由 <code>Let's discuss...</code> 或 <code>Today we are here to talk about...</code> 等短语引导的宾语从句 (noun clause)。
+                    然而，在少数情况下，它们也可能以<HighlightText color="#e67e22">问句 (questions)</HighlightText> 的形式提问。当遇到这种情况时，我们需要将问句转换为由 <code>Let's discuss...</code> 或 <code>Today we are here to talk about...</code> 等短语引导的<HighlightText color="#2ecc71">宾语从句 (noun clause)</HighlightText>。
                 </p>
                 <p>
                     例如: "What are the pros?" 变为 "Today, let's discuss <strong>what the pros are</strong>."
@@ -81,8 +82,8 @@ export const RoleplayExercise: React.FC<RoleplayExerciseProps> = ({ themeColor }
                     rel="noopener noreferrer"
                     themeColor={themeColor}
                 >
-                    <span role="img" aria-label="audio">🔊</span>
-                    <span>这个可以听了参考 (Listen for reference)</span>
+                    <span role="img" aria-label="audio">🔈</span>
+                    <span>Listen</span>
                 </AudioLink>
 
                 <QuestionList>

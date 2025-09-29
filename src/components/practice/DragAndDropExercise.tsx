@@ -13,6 +13,7 @@ import {
     DroppedItem,
     CompletionMessage,
     Instruction,
+    ContinueButton,
 } from './DragAndDropExercise.styles';
 
 // --- Data ---
@@ -35,18 +36,19 @@ const initialPhrases: Phrase[] = [
     { id: 8, text: "Does anyone want to start?", category: 'inviting' },
 ];
 
-const categories: Record<Category, string> = {
-    greeting: 'Greeting & Starting',
-    introducing: 'Introducing the Topic',
-    inviting: 'Inviting Opinions',
+const categoryStyles: Record<Category, { color: string; title: string }> = {
+    greeting: { color: '#3498db', title: 'Greeting & Starting' },
+    introducing: { color: '#2ecc71', title: 'Introducing the Topic' },
+    inviting: { color: '#e67e22', title: 'Inviting Opinions' },
 };
 
 // --- Component ---
 interface DragAndDropExerciseProps {
+    onComplete: () => void;
     themeColor: string;
 }
 
-export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ themeColor }) => {
+export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComplete, themeColor }) => {
     const [bankItems, setBankItems] = useState<Phrase[]>(initialPhrases);
     const [droppedItems, setDroppedItems] = useState<Record<Category, Phrase[]>>({
         greeting: [],
@@ -100,8 +102,13 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ themeC
         <ExerciseContainer>
             {isComplete ? (
                 <CompletionMessage>
-                    <h4>🎉 Excellent Work!</h4>
-                    <p>You have correctly categorized all the communication strategies.</p>
+                    <div>
+                        <h4>🎉 Excellent Work!</h4>
+                        <p>You have correctly categorized all the communication strategies.</p>
+                    </div>
+                    <ContinueButton onClick={onComplete} themeColor={themeColor}>
+                        继续练习 2 (Continue to Practice 2)
+                    </ContinueButton>
                 </CompletionMessage>
             ) : (
                 <>
@@ -112,24 +119,37 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ themeC
                     </Instruction>
                     <ItemBank>
                         {bankItems.length > 0 ? (
-                            bankItems.map(item => (
-                                <DraggableItem
-                                    key={item.id}
-                                    draggable
-                                    onDragStart={() => handleDragStart(item)}
-                                    onDragEnd={() => setDraggedItem(null)}
-                                    isDragging={draggedItem?.id === item.id}
-                                >
-                                    {item.text}
-                                </DraggableItem>
-                            ))
+                            bankItems.map(item => {
+                                const isCurrentlyDragged = draggedItem?.id === item.id;
+                                let draggingColor = '#7f8c8d'; // Default grey for dragging
+                                if (isCurrentlyDragged && dragOverZone && item.category === dragOverZone) {
+                                    // If hovering over the correct zone, use its color
+                                    draggingColor = categoryStyles[dragOverZone].color;
+                                }
+
+                                return (
+                                    <DraggableItem
+                                        key={item.id}
+                                        draggable
+                                        onDragStart={() => handleDragStart(item)}
+                                        onDragEnd={() => {
+                                            setDraggedItem(null);
+                                            setDragOverZone(null);
+                                        }}
+                                        isDragging={isCurrentlyDragged}
+                                        draggingColor={draggingColor}
+                                    >
+                                        {item.text}
+                                    </DraggableItem>
+                                );
+                            })
                         ) : (
                             <p>All items placed correctly!</p>
                         )}
                     </ItemBank>
 
                     <DropZoneContainer>
-                        {(Object.keys(categories) as Category[]).map(cat => (
+                        {(Object.keys(categoryStyles) as Category[]).map(cat => (
                             <DropZone
                                 key={cat}
                                 onDragOver={(e) => handleDragOver(e, cat)}
@@ -137,11 +157,11 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ themeC
                                 onDrop={() => handleDrop(cat)}
                                 isOver={dragOverZone === cat}
                                 isIncorrect={incorrectDrop === cat}
-                                themeColor={themeColor}
+                                themeColor={categoryStyles[cat].color}
                             >
-                                <DropZoneTitle>{categories[cat]}</DropZoneTitle>
+                                <DropZoneTitle>{categoryStyles[cat].title}</DropZoneTitle>
                                 {droppedItems[cat].map(item => (
-                                    <DroppedItem key={item.id} themeColor={themeColor}>
+                                    <DroppedItem key={item.id} themeColor={categoryStyles[item.category].color}>
                                         {item.text}
                                     </DroppedItem>
                                 ))}

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { GlobalStyle } from '../../styles/GlobalStyle';
 import { cardDataConfig } from '../../data/definitions';
 import { SkillsIcon, TopicsIcon, PapersIcon } from '../../data/icons';
@@ -12,6 +12,8 @@ import { AppContainer, Header, CardsContainer } from './App.styles';
 import { SpeakingSkillsContent } from '../content/SpeakingSkills/SpeakingSkillsContent';
 import { SpeakingTopicsContent } from '../content/SpeakingTopics/SpeakingTopicsContent';
 import { PastPapersContent } from '../content/PastPapers/PastPapersContent';
+import { VocabularyProvider, VocabularyContext } from '../Vocabulary/VocabularyContext';
+import { VocabularyManager } from '../Vocabulary';
 
 // --- Icon Map ---
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -36,6 +38,7 @@ const contentComponents: { [key: string]: React.ReactNode } = {
 // --- Main App Component ---
 const DseApp = () => {
     const [activeContent, setActiveContent] = useState<string | null>(null);
+    const { addWord } = useContext(VocabularyContext);
 
     const openContent = (contentId: string) => setActiveContent(contentId);
     const closeContent = () => setActiveContent(null);
@@ -55,10 +58,23 @@ const DseApp = () => {
         };
     }, [activeContent]);
 
+    const handleWordSelection = (event: React.MouseEvent) => {
+        const selection = window.getSelection();
+        if (!selection || selection.toString().trim() === '') return;
+
+        // Clean the selected text: remove punctuation, convert to lowercase
+        const text = selection.toString().trim().replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").toLowerCase();
+
+        // Basic validation: ensure it's a single word and has content
+        if (text && text.length > 1 && !text.includes(' ')) {
+            addWord(text);
+        }
+    };
+
     const activeCard = activeContent ? cardData.find(card => card.id === activeContent) : null;
 
     return (
-        <AppContainer>
+        <AppContainer onDoubleClick={handleWordSelection}>
             {!activeCard ? (
                 <>
                     <Header>
@@ -97,10 +113,11 @@ const DseApp = () => {
 // --- Encapsulating Wrapper Component for Integration ---
 const DseSpeakingHubApp = () => {
     return (
-        <>
+        <VocabularyProvider>
             <GlobalStyle />
             <DseApp />
-        </>
+            <VocabularyManager />
+        </VocabularyProvider>
     );
 };
 

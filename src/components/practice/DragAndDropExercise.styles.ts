@@ -117,7 +117,7 @@ export const DropZoneTitle = styled.h4`
     border-bottom: 1px solid #eee;
 `;
 
-export const DraggableItem = styled.div<{ isDragging: boolean }>`
+export const DraggableItem = styled.div<{ isDragging: boolean; draggingColor: string; }>`
     background-color: #fff;
     color: #34495e;
     padding: 12px 18px;
@@ -129,15 +129,19 @@ export const DraggableItem = styled.div<{ isDragging: boolean }>`
     font-weight: 500;
     animation: ${popIn} 0.3s ease-out;
     text-align: center;
+    border: 1px solid #d1d5db;
 
     &:active {
         cursor: grabbing;
     }
 
     ${props => props.isDragging && css`
-        opacity: 0.5;
+        opacity: 0.9;
         box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         transform: scale(1.05);
+        background-color: ${props.draggingColor};
+        border-color: ${props.draggingColor};
+        color: white;
     `}
 `;
 
@@ -170,6 +174,10 @@ export const CompletionMessage = styled.div`
     color: #2e7d32;
     border-radius: 10px;
     animation: ${popIn} 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 
     h4 {
         font-size: 1.4em;
@@ -178,5 +186,25 @@ export const CompletionMessage = styled.div`
 
     p {
         font-size: 1em;
+        margin: 0;
+    }
+`;
+
+export const ContinueButton = styled.button<{ themeColor: string }>`
+    padding: 12px 30px;
+    background-color: ${props => props.themeColor};
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    &:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 `;
