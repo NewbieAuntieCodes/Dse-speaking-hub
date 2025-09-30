@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 import { MakingSuggestionsContent } from './MakingSuggestionsContent';
+import { MakingChoicesContent } from './MakingChoicesContent';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -140,7 +141,7 @@ interface QuestionTypesContentProps {
     themeColor: string;
 }
 
-type View = 'list' | 'suggestions';
+type View = 'list' | 'suggestions' | 'choices';
 
 export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBack, onNext, themeColor }) => {
     const [view, setView] = useState<View>('list');
@@ -152,6 +153,14 @@ export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBa
             themeColor={suggestionsCardData.borderColor} 
         />;
     }
+
+    const choicesCardData = questionTypes.find(type => type.id === 'choices');
+    if (view === 'choices' && choicesCardData) {
+        return <MakingChoicesContent 
+            onBack={() => setView('list')} 
+            themeColor={choicesCardData.borderColor} 
+        />;
+    }
     
     return (
         <Container>
@@ -160,13 +169,14 @@ export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBa
 
             <ContentGrid>
                 {questionTypes.map((type) => {
-                    const isClickable = type.id === 'suggestions';
+                    const clickableTypes: ReadonlyArray<string> = ['suggestions', 'choices'];
+                    const isClickable = clickableTypes.includes(type.id);
                     return (
                         <TypeCard 
                             key={type.title} 
                             borderColor={type.borderColor}
                             isClickable={isClickable}
-                            onClick={isClickable ? () => setView('suggestions') : undefined}
+                            onClick={isClickable ? () => setView(type.id as View) : undefined}
                             aria-disabled={!isClickable}
                         >
                             <CardTitleContainer>
