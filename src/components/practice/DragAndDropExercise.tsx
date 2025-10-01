@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
     ExerciseContainer,
     ItemBank,
@@ -60,6 +60,14 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComp
     const [isComplete, setIsComplete] = useState(false);
     const [incorrectDrop, setIncorrectDrop] = useState<Category | null>(null);
 
+    // Refs for drop zones to enable touch-based drag-and-drop
+    const dropZoneRefs = {
+        greeting: useRef<HTMLDivElement>(null),
+        introducing: useRef<HTMLDivElement>(null),
+        inviting: useRef<HTMLDivElement>(null),
+    };
+
+
     useEffect(() => {
         if (bankItems.length === 0 && !isComplete) {
             setIsComplete(true);
@@ -79,7 +87,7 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComp
         setDragOverZone(null);
     };
 
-    const handleDrop = (category: Category) => {
+    const handleDrop = useCallback((category: Category) => {
         if (!draggedItem) return;
 
         if (draggedItem.category === category) {
@@ -96,7 +104,66 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComp
         
         setDraggedItem(null);
         setDragOverZone(null);
+    }, [draggedItem]);
+
+    // --- Touch Event Handlers for Tablet/Mobile Support ---
+    const handleTouchStart = (item: Phrase) => {
+        handleDragStart(item);
     };
+
+    const handleTouchMove = useCallback((e: TouchEvent) => {
+        if (!draggedItem) return;
+
+        // Prevent scrolling while dragging
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (!elementUnderTouch) {
+            setDragOverZone(null);
+            return;
+        }
+
+        let newOverZone: Category | null = null;
+        const categories = Object.keys(dropZoneRefs) as Category[];
+        for (const cat of categories) {
+            const dropZoneRef = dropZoneRefs[cat];
+            if (dropZoneRef.current && dropZoneRef.current.contains(elementUnderTouch)) {
+                newOverZone = cat;
+                break;
+            }
+        }
+        
+        if (newOverZone !== dragOverZone) {
+            setDragOverZone(newOverZone);
+        }
+    }, [draggedItem, dragOverZone]);
+
+    const handleTouchEnd = useCallback(() => {
+        if (dragOverZone) {
+            handleDrop(dragOverZone);
+        } else {
+            // If not dropped on a zone, just cleanup
+            setDraggedItem(null);
+            setDragOverZone(null);
+        }
+    }, [dragOverZone, handleDrop]);
+
+    // Effect to add/remove global touch listeners when a drag is initiated
+    useEffect(() => {
+        if (draggedItem) {
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchend', handleTouchEnd);
+            window.addEventListener('touchcancel', handleTouchEnd);
+        }
+
+        return () => {
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('touchcancel', handleTouchEnd);
+        };
+    }, [draggedItem, handleTouchMove, handleTouchEnd]);
 
     return (
         <ExerciseContainer>
@@ -136,6 +203,7 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComp
                                             setDraggedItem(null);
                                             setDragOverZone(null);
                                         }}
+                                        onTouchStart={() => handleTouchStart(item)}
                                         isDragging={isCurrentlyDragged}
                                         draggingColor={draggingColor}
                                     >
@@ -152,6 +220,7 @@ export const DragAndDropExercise: React.FC<DragAndDropExerciseProps> = ({ onComp
                         {(Object.keys(categoryStyles) as Category[]).map(cat => (
                             <DropZone
                                 key={cat}
+                                ref={dropZoneRefs[cat]}
                                 onDragOver={(e) => handleDragOver(e, cat)}
                                 onDragLeave={handleDragLeave}
                                 onDrop={() => handleDrop(cat)}

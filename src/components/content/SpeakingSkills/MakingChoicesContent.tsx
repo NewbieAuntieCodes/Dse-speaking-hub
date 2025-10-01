@@ -22,33 +22,33 @@ const BackButton = styled(OriginalBackButton)`
 `;
 
 const LessonTitle = styled(OriginalLessonTitle)`
-    font-size: 2.8em;
-    padding-bottom: 25px;
-    margin-bottom: 40px;
+    font-size: 2.5em;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
     
     @media (max-width: 768px) {
-        font-size: 2.2em;
+        font-size: 2.0em;
     }
 `;
 
 const Section = styled.section`
     background: #ffffff;
     border-radius: 20px;
-    padding: 35px 45px;
-    margin-bottom: 40px;
+    padding: 30px 40px;
+    margin-bottom: 30px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
     border: 1px solid #e9ecef;
 
     @media (max-width: 768px) {
-        padding: 25px;
+        padding: 20px;
     }
 `;
 
 const SectionHeader = styled.h3`
-    font-size: 1.9em;
+    font-size: 1.7em;
     font-weight: bold;
     color: #2c3e50;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -81,15 +81,19 @@ const GeneralInstructions = styled.div`
         font-size: 1.05em;
         color: #4a5568;
         line-height: 1.7;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 `;
 
 const OptionsGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin: 20px 0;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 const OptionCard = styled.div`
@@ -126,9 +130,16 @@ const OptionDescription = styled.p`
 `;
 
 const TaskContainer = styled.div`
-    margin-top: 25px;
+    margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #dee2e6;
+
+    p {
+        font-size: 1.05em;
+        color: #4a5568;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
 `;
 
 const TaskList = styled.ul`
@@ -139,7 +150,10 @@ const TaskList = styled.ul`
     line-height: 1.8;
 
     li {
-        margin-bottom: 5px;
+        margin-bottom: 12px;
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 `;
 
@@ -205,41 +219,63 @@ const PracticeList = styled.ol`
     list-style: decimal;
     padding-left: 20px;
     font-size: 1.1em;
-    line-height: 2.5;
+    line-height: 2.2;
 `;
 
 const PracticeItem = styled.li`
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: #4a5568;
 `;
 
-const BlankInput = styled.input<{ isCorrect?: boolean }>`
+const AudioLink = styled.a`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 280px;
+    margin: 10px auto 20px auto;
+    padding: 12px 25px;
+    gap: 12px;
+    background: linear-gradient(45deg, ${props => props.theme.mainColor}, ${props => props.theme.mainColor + 'd0'});
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: all 0.3s ease;
     border: none;
-    border-bottom: 2px solid #ced4da;
-    background: transparent;
-    font-size: 1em;
-    font-family: inherit;
-    padding: 2px 5px;
-    width: 150px;
-    text-align: center;
-    transition: border-color 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 
-    &:focus {
-        outline: none;
-        border-bottom-color: ${props => props.theme.mainColor};
+    &:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
 
-    ${({ isCorrect }) => isCorrect === true && `
-        border-bottom-color: #2ecc71;
-    `}
-    ${({ isCorrect }) => isCorrect === false && `
-        border-bottom-color: #e74c3c;
-    `}
+    span[role="img"] {
+        font-size: 1.1em;
+    }
+`;
+
+const BlankPlaceholder = styled.span`
+    display: inline-block;
+    border-bottom: 2px solid #ced4da;
+    width: 150px;
+    margin: 0 5px;
+    vertical-align: bottom;
+`;
+
+const RevealedAnswer = styled.span`
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #a5d6a7;
+    margin: 0 5px;
 `;
 
 const ButtonContainer = styled.div`
     text-align: center;
-    margin-top: 30px;
+    margin-top: 25px;
 `;
 
 const CheckButton = styled.button<{ themeColor: string }>`
@@ -260,11 +296,6 @@ const CheckButton = styled.button<{ themeColor: string }>`
     }
 `;
 
-const Feedback = styled.span`
-    margin-left: 10px;
-    font-size: 1.2em;
-`;
-
 // --- Data ---
 const choicePhrases = [
     "I'd like to go...", "I prefer...", "I think ... would be the best option.",
@@ -281,11 +312,11 @@ const exampleDialogues = [
 const practiceQuestions = [
     { q: "I think rock climbing ___ be the best option.", a: ["would"] },
     { q: "I ___ cycling in the countryside.", a: ["prefer"] },
-    { q: "I ___ for rock climbing.", a: ["would opt", "will go", "would go"] },
-    { q: "___ hiking.", a: ["i'll go for", "we'll go for"] },
+    { q: "I ___ for rock climbing.", a: ["would pick / will go / would go"] },
+    { q: "___ hiking.", a: ["I'll go for"] },
     { q: "My ___ would be cycling.", a: ["choice"] },
-    { q: "Rock climbing is the best option ___ it's an adventurous way to get exercise.", a: ["because", "as"] },
-    { q: "I'm in favour of hiking, ___ it lets us exercise while enjoying some scenery.", a: ["as", "because"] },
+    { q: "Rock climbing is the best option ___ it's an adventurous way to get exercise.", a: ["because"] },
+    { q: "I'm in favour of hiking, ___ it lets us exercise while enjoying some scenery.", a: ["as"] },
     { q: "I prefer cycling in the countryside ___ the fresh air.", a: ["because of"] }
 ];
 
@@ -296,41 +327,10 @@ interface MakingChoicesContentProps {
 }
 
 export const MakingChoicesContent: React.FC<MakingChoicesContentProps> = ({ onBack, themeColor }) => {
-    const [answers, setAnswers] = useState<string[]>(Array(practiceQuestions.length).fill(''));
-    const [results, setResults] = useState<(boolean | undefined)[]>(Array(practiceQuestions.length).fill(undefined));
+    const [showAnswers, setShowAnswers] = useState(false);
 
-    const handleAnswerChange = (index: number, value: string) => {
-        const newAnswers = [...answers];
-        newAnswers[index] = value;
-        setAnswers(newAnswers);
-        setResults(Array(practiceQuestions.length).fill(undefined)); // Reset results on change
-    };
-
-    const checkAnswers = () => {
-        const newResults = answers.map((answer, index) => {
-            const correctAnswers = practiceQuestions[index].a;
-            return correctAnswers.includes(answer.trim().toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ""));
-        });
-        setResults(newResults);
-    };
-
-    const renderPracticeQuestion = (question: string, index: number) => {
-        const parts = question.split('___');
-        return (
-            <PracticeItem key={index}>
-                {parts[0]}
-                <BlankInput
-                    type="text"
-                    value={answers[index]}
-                    onChange={(e) => handleAnswerChange(index, e.target.value)}
-                    isCorrect={results[index]}
-                    aria-label={`Blank for question ${index + 1}`}
-                />
-                {parts[1]}
-                {results[index] === true && <Feedback role="img" aria-label="Correct">✅</Feedback>}
-                {results[index] === false && <Feedback role="img" aria-label="Incorrect">❌</Feedback>}
-            </PracticeItem>
-        );
+    const toggleAnswers = () => {
+        setShowAnswers(prev => !prev);
     };
 
     return (
@@ -340,7 +340,7 @@ export const MakingChoicesContent: React.FC<MakingChoicesContentProps> = ({ onBa
                 <LessonTitle>Making & Explaining Choices</LessonTitle>
 
                 <Section>
-                    <SectionHeader>🎯 选择方式 1: 直接选择 (Method 1: State a Direct Choice)</SectionHeader>
+                    <SectionHeader>选择方式 1: 直接选择 (Method 1: State a Direct Choice)</SectionHeader>
                     <ReadingMaterialContainer>
                         <GeneralInstructions>
                             <h4>GENERAL INSTRUCTIONS</h4>
@@ -411,11 +411,33 @@ export const MakingChoicesContent: React.FC<MakingChoicesContentProps> = ({ onBa
                 <Section>
                     <SectionHeader>✍️ Practice Exercise</SectionHeader>
                     <SubHeader>Listen to the recording. Fill in the blanks with different expressions for indicating and explaining choices.</SubHeader>
+                    <AudioLink 
+                        href="https://players.brightcove.net/6144772950001/default_default/index.html?videoId=6268730379001" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                    >
+                        <span role="img" aria-label="audio">🔈</span> Listen to the recording
+                    </AudioLink>
                     <PracticeList>
-                        {practiceQuestions.map((item, index) => renderPracticeQuestion(item.q, index))}
+                        {practiceQuestions.map((item, index) => {
+                            const parts = item.q.split('___');
+                            return (
+                                <PracticeItem key={index}>
+                                    {index + 1}. {parts[0]}
+                                    {showAnswers ? (
+                                        <RevealedAnswer>{item.a.join(' / ')}</RevealedAnswer>
+                                    ) : (
+                                        <BlankPlaceholder />
+                                    )}
+                                    {parts[1]}
+                                </PracticeItem>
+                            );
+                        })}
                     </PracticeList>
                     <ButtonContainer>
-                        <CheckButton onClick={checkAnswers} themeColor={themeColor}>Check Answers</CheckButton>
+                        <CheckButton onClick={toggleAnswers} themeColor={themeColor}>
+                            {showAnswers ? 'Hide Answers' : 'Show Answers'}
+                        </CheckButton>
                     </ButtonContainer>
                 </Section>
             </Container>
