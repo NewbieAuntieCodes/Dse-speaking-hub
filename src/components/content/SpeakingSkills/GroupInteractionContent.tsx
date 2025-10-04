@@ -12,6 +12,7 @@ import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '
 import { ConcludingTechniquesContent } from './ConcludingTechniquesContent';
 import { ExampleGroupInteractionContent } from './ExampleGroupInteractionContent';
 import { QuestionTypesContent } from './QuestionTypesContent';
+import { AcknowledgingOpinionsContent } from './AcknowledgingOpinionsContent';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -480,7 +481,7 @@ const PreStructureContent: React.FC<{ onBack: () => void; onNext: () => void; th
             </SectionWrapper>
             <NextButtonContainer>
                 <NextButton onClick={onNext} themeColor={themeColor}>
-                    <span>Next: Concluding Techniques</span>
+                    <span>Next: Acknowledging Others' Opinions</span>
                     <span className="arrow">→</span>
                 </NextButton>
             </NextButtonContainer>
@@ -494,7 +495,7 @@ interface GroupInteractionContentProps {
     themeColor: string;
 }
 
-type View = 'list' | 'opening' | 'pre' | 'questionTypes' | 'concluding' | 'example';
+type View = 'list' | 'opening' | 'pre' | 'acknowledging' | 'concluding' | 'example' | 'questionTypes';
 
 // --- Main Component (now a router) ---
 export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = ({ onBack, onNext, themeColor }) => {
@@ -505,7 +506,11 @@ export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = (
     }
 
     if (view === 'pre') {
-        return <PreStructureContent onBack={() => setView('list')} onNext={() => setView('concluding')} themeColor={themeColor} />;
+        return <PreStructureContent onBack={() => setView('list')} onNext={() => setView('acknowledging')} themeColor={themeColor} />;
+    }
+
+    if (view === 'acknowledging') {
+        return <AcknowledgingOpinionsContent onBack={() => setView('list')} onNext={() => setView('concluding')} themeColor={themeColor} />;
     }
 
     if (view === 'concluding') {
@@ -532,6 +537,10 @@ export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = (
                 <LessonItem borderColor={themeColor} onClick={() => setView('pre')}>
                     <LessonTitleChinese>PRE 万能结构</LessonTitleChinese>
                     <LessonTitleEnglish>The PRE Structure</LessonTitleEnglish>
+                </LessonItem>
+                <LessonItem borderColor={themeColor} onClick={() => setView('acknowledging')}>
+                    <LessonTitleChinese>回应他人观点</LessonTitleChinese>
+                    <LessonTitleEnglish>Acknowledging Others' Opinions</LessonTitleEnglish>
                 </LessonItem>
                 <LessonItem borderColor={themeColor} onClick={() => setView('concluding')}>
                     <LessonTitleChinese>总结结尾技巧</LessonTitleChinese>

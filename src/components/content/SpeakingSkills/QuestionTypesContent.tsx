@@ -7,6 +7,7 @@ import styled, { keyframes } from 'styled-components';
 import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 import { MakingSuggestionsContent } from './MakingSuggestionsContent';
 import { MakingChoicesContent } from './MakingChoicesContent';
+import { ArguingPositionContent } from './ArguingPositionContent';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -141,7 +142,7 @@ interface QuestionTypesContentProps {
     themeColor: string;
 }
 
-type View = 'list' | 'suggestions' | 'choices';
+type View = 'list' | 'suggestions' | 'choices' | 'arguing';
 
 export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBack, onNext, themeColor }) => {
     const [view, setView] = useState<View>('list');
@@ -161,6 +162,14 @@ export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBa
             themeColor={choicesCardData.borderColor} 
         />;
     }
+
+    const arguingCardData = questionTypes.find(type => type.id === 'arguing');
+    if (view === 'arguing' && arguingCardData) {
+        return <ArguingPositionContent 
+            onBack={() => setView('list')} 
+            themeColor={arguingCardData.borderColor} 
+        />;
+    }
     
     return (
         <Container>
@@ -169,7 +178,7 @@ export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBa
 
             <ContentGrid>
                 {questionTypes.map((type) => {
-                    const clickableTypes: ReadonlyArray<string> = ['suggestions', 'choices'];
+                    const clickableTypes: ReadonlyArray<string> = ['suggestions', 'choices', 'arguing'];
                     const isClickable = clickableTypes.includes(type.id);
                     return (
                         <TypeCard 
