@@ -19,11 +19,13 @@ export const AnsweringSkillsContent: React.FC<AnsweringSkillsContentProps> = ({ 
     const [view, setView] = useState<View>('list');
 
     if (view === 'group') {
-        return <GroupInteractionContent onBack={() => setView('list')} themeColor={themeColor} />;
+        // Fix: Pass onNext prop to navigate to the individual response view.
+        return <GroupInteractionContent onBack={() => setView('list')} onNext={() => setView('individual')} themeColor={themeColor} />;
     }
 
     if (view === 'individual') {
-        return <IndividualResponseContent onBack={() => setView('list')} themeColor={themeColor} />;
+        // Fix: Pass onReturn prop to navigate back to this component's list view, providing the required prop.
+        return <IndividualResponseContent onBack={() => setView('list')} onReturn={() => setView('list')} themeColor={themeColor} />;
     }
 
     return (

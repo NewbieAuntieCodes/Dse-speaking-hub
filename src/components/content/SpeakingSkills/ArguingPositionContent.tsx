@@ -2,9 +2,9 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes, ThemeProvider } from 'styled-components';
-import { BackButton as OriginalBackButton, LessonTitle as OriginalLessonTitle } from '../Structures/SVOContent.styles';
+import { BackButton as OriginalBackButton, LessonTitle as OriginalLessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -144,6 +144,172 @@ const PhraseItem = styled.li`
     }
 `;
 
+// --- Styled components for "Acknowledging Opinions" section ---
+
+const AcknowledgingSectionTitle = styled.h3<{ themeColor: string }>`
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid ${props => props.themeColor || '#f0f2f5'};
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .icon {
+        font-size: 1.2em;
+    }
+`;
+
+const DiscussionFlow = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 30px;
+`;
+
+const StepLabel = styled.div<{ themeColor: string }>`
+    background-color: #f0f2f5;
+    color: #4a5568;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    border: 2px solid ${props => props.themeColor}33;
+    margin-bottom: 15px;
+`;
+
+const SpeechBubble = styled.div`
+    background: #e9ecef;
+    border-radius: 20px;
+    padding: 20px 25px;
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    line-height: 1.7;
+    font-size: 1.05em;
+    color: #34495e;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 30px;
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 20px solid #e9ecef;
+    }
+    
+    strong {
+        font-weight: bold;
+        background-color: #fffbe6;
+        padding: 2px 5px;
+        border-radius: 4px;
+        border-bottom: 2px solid #ffe58f;
+    }
+`;
+
+const ExampleGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+`;
+
+const ExampleCard = styled.div`
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+`;
+
+const DialoguePart = styled.div<{ themeColor: string }>`
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.7;
+    color: #34495e;
+
+    .number {
+        background-color: ${props => props.themeColor};
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+
+    .text {
+        flex: 1;
+    }
+`;
+
+const VocabBox = styled.div`
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+    line-height: 1.6;
+    color: #4a5568;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+
+    &::before {
+        content: '🔎';
+        font-size: 1.2em;
+        margin-top: 2px;
+    }
+
+    strong {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+`;
+
+const WordBox = styled.div`
+    margin-top: 30px;
+    border-top: 2px dashed #ced4da;
+    padding-top: 25px;
+    text-align: center;
+
+    h4 {
+        font-size: 1.2em;
+        color: #34495e;
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    li {
+        background-color: #eaf5ff;
+        color: #2f54eb;
+        border: 1px solid #adc6ff;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+`;
+
 
 // --- Data ---
 const strongAgreement = ['I agree with you.', 'This is a great idea.', 'Great point.', "You're right.", "That's true.", 'I like your idea.', 'I think so too.', 'I feel the same way.'];
@@ -158,73 +324,189 @@ interface ArguingPositionContentProps {
     themeColor: string;
 }
 
+type View = 'agreeDisagree' | 'acknowledging';
+
 export const ArguingPositionContent: React.FC<ArguingPositionContentProps> = ({ onBack, themeColor }) => {
+    const [view, setView] = useState<View>('agreeDisagree');
+
+    const acknowledgingThemeColor = "#1abc9c"; // A distinct color for this section as in the original design
+
+    // Page 1: Agreeing & Disagreeing
+    const AgreeDisagreePage = () => (
+        <Container>
+            <BackButton onClick={onBack} themeColor={themeColor}>← Back to 5 Major Question Types</BackButton>
+            <LessonTitle>Agreeing & Disagreeing</LessonTitle>
+
+            <Section>
+                <SectionHeader>🤝 Communication Strategies</SectionHeader>
+                <BodyText>
+                    During the exam, you should show that you have listened to and evaluated what your group members have said. One way of doing so is to <strong>agree</strong> or <strong>disagree</strong> with others' opinions.
+                </BodyText>
+            </Section>
+            
+            <Section>
+                <SectionHeader>💬 Example Discussion: Air Pollution</SectionHeader>
+                <BodyText>These students are discussing the problem of air pollution in Hong Kong. Look at how they support their opinions with a reason.</BodyText>
+                <DialogueGrid>
+                    <DialogueCard>
+                        <DialogueHeader><span className="icon">🤔</span>Student A starts:</DialogueHeader>
+                        <DialogueText>"I think the Hong Kong government should do more to address the problem of air pollution."</DialogueText>
+                    </DialogueCard>
+                    <DialogueCard>
+                        <DialogueHeader><span className="icon">👍</span>Student B agrees:</DialogueHeader>
+                        <DialogueText><strong>"I agree.</strong> Bad air quality is a serious health risk for everyone living in Hong Kong."</DialogueText>
+                    </DialogueCard>
+                    <DialogueCard>
+                        <DialogueHeader><span className="icon">💡</span>Student C gives reasons:</DialogueHeader>
+                        <DialogueText>"In order to improve air quality, the government could encourage people to switch to electric vehicles by offering them subsidies. They could also stop people from buying petrol vehicles by implementing heavy taxes on petrol."</DialogueText>
+                    </DialogueCard>
+                    <DialogueCard>
+                        <DialogueHeader><span className="icon">👎</span>Student D disagrees:</DialogueHeader>
+                        <DialogueText><strong>"I don't think that's a good idea.</strong> Even with government subsidies, electric vehicles will still be too expensive for many people. Also, there are not enough charging stations in the city, so this idea may not be practical."</DialogueText>
+                    </DialogueCard>
+                </DialogueGrid>
+            </Section>
+            
+            <Section>
+                <SectionHeader>✨ Useful Expressions</SectionHeader>
+                <ExpressionsGrid>
+                    <ExpressionCard borderColor="#27ae60">
+                        <CardHeader bgColor="#e8f5e9" color="#2e7d32">Strong Agreement</CardHeader>
+                        <PhraseList>
+                            {strongAgreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
+                        </PhraseList>
+                    </ExpressionCard>
+                    <ExpressionCard borderColor="#c0392b">
+                        <CardHeader bgColor="#fdeded" color="#c0392b">Strong Disagreement</CardHeader>
+                        <PhraseList>
+                            {strongDisagreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
+                        </PhraseList>
+                    </ExpressionCard>
+                     <ExpressionCard borderColor="#27ae60">
+                        <CardHeader bgColor="#e8f5e9" color="#2e7d32">Weak Agreement</CardHeader>
+                        <PhraseList>
+                            {weakAgreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
+                        </PhraseList>
+                    </ExpressionCard>
+                     <ExpressionCard borderColor="#c0392b">
+                        <CardHeader bgColor="#fdeded" color="#c0392b">Weak Disagreement</CardHeader>
+                        <PhraseList>
+                            {weakDisagreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
+                        </PhraseList>
+                    </ExpressionCard>
+                </ExpressionsGrid>
+            </Section>
+
+            <NextButtonContainer>
+                <NextButton onClick={() => setView('acknowledging')} themeColor={themeColor}>
+                    <span>Next: Acknowledging Opinions</span>
+                    <span className="arrow">→</span>
+                </NextButton>
+            </NextButtonContainer>
+        </Container>
+    );
+
+    // Page 2: Acknowledging Others' Opinions
+    const AcknowledgingOpinionsPage = () => (
+        <Container>
+            <BackButton onClick={() => setView('agreeDisagree')} themeColor={acknowledgingThemeColor}>← Back to Agreeing & Disagreeing</BackButton>
+            <LessonTitle>Acknowledging Others' Opinions</LessonTitle>
+        
+            <Section>
+                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
+                    <span className="icon">👂</span> Why Acknowledge?
+                </AcknowledgingSectionTitle>
+                <BodyText>
+                    During the Group Interaction, if you are not sure whether to agree or disagree with other students, you can acknowledge others' opinions before expressing your own. This shows you are an active listener and helps the conversation flow smoothly.
+                </BodyText>
+            </Section>
+            
+            <Section>
+                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
+                    <span className="icon">💬</span> Example Discussion: Beach Clean-up
+                </AcknowledgingSectionTitle>
+                <BodyText>These students are discussing how to organize a beach clean-up day at Tap Mun.</BodyText>
+                
+                <DiscussionFlow>
+                    <div>
+                        <StepLabel themeColor={acknowledgingThemeColor}>① Acknowledging other speakers' point</StepLabel>
+                        <SpeechBubble>
+                            Our environmental club is organizing a beach clean-up day at Tap Mun. We'll need to stock up on bin bags and plastic gloves, and the school will help organize transport. The school should make this event mandatory for students. Everyone will learn from it and we'll clean the beach up faster.
+                        </SpeechBubble>
+                    </div>
+                    <div>
+                        <StepLabel themeColor={acknowledgingThemeColor}>② Expressing a further opinion</StepLabel>
+                        <SpeechBubble>
+                            <strong>You have a point there.</strong> Students who don't usually care about the environment will see how big the problem is.
+                        </SpeechBubble>
+                    </div>
+                </DiscussionFlow>
+            </Section>
+
+            <Section>
+                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
+                    <span className="icon">🔎</span> Deeper Analysis
+                </AcknowledgingSectionTitle>
+                <ExampleGrid>
+                    <ExampleCard>
+                        <DialoguePart themeColor={acknowledgingThemeColor}>
+                            <span className="number">1</span>
+                            <span className="text">I hear what you're saying,</span>
+                        </DialoguePart>
+                        <DialoguePart themeColor={acknowledgingThemeColor}>
+                            <span className="number">2</span>
+                            <span className="text">but I'm not sure if forcing students to participate is a good idea. They might <strong>resent</strong> it, and students with allergies or disabilities could feel left out.</span>
+                        </DialoguePart>
+                        <VocabBox>
+                            <div><strong>resent</strong> = to feel bitter or angry about something, especially because you feel it is unfair</div>
+                        </VocabBox>
+                    </ExampleCard>
+
+                    <ExampleCard>
+                        <DialoguePart themeColor={acknowledgingThemeColor}>
+                            <span className="number">1</span>
+                            <span className="text">I see what you mean.</span>
+                        </DialoguePart>
+                        <DialoguePart themeColor={acknowledgingThemeColor}>
+                            <span className="number">2</span>
+                            <span className="text">I think it would be OK if the beach clean-up was optional, though. It's a day off school, so lots of students should be interested in joining us.</span>
+                        </DialoguePart>
+                    </ExampleCard>
+                </ExampleGrid>
+            </Section>
+            
+            <Section>
+                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
+                    <span className="icon">🎯</span> Practice Time
+                </AcknowledgingSectionTitle>
+                <BodyText>The following suggestion was also made in the discussion above. Take turns to acknowledge what is said and express a further opinion. You may like to use the expressions in the word box.</BodyText>
+                <SpeechBubble>
+                    Let's do a documentary programme on beach waste and the effect of plastics on the ocean. It will be <strong>informative</strong>, and it might also be a <strong>wake-up call</strong> for students who don't realize how big the problem is.
+                </SpeechBubble>
+                <VocabBox>
+                    <div><strong>wake-up call</strong> = an event that makes people realize that there is a problem that they need to do something about</div>
+                </VocabBox>
+                <WordBox>
+                    <h4>Expressions Word Box</h4>
+                    <ul>
+                        <li>I see your point.</li>
+                        <li>I understand your point.</li>
+                        <li>I take your point.</li>
+                    </ul>
+                </WordBox>
+            </Section>
+            <NextButtonContainer>
+                <NextButton onClick={onBack} themeColor={themeColor}>
+                    <span>Return to Question Types</span>
+                    <span className="arrow">↩</span>
+                </NextButton>
+            </NextButtonContainer>
+        </Container>
+    );
+
     return (
         <ThemeProvider theme={{ mainColor: themeColor }}>
-            <Container>
-                <BackButton onClick={onBack} themeColor={themeColor}>← Back to 5 Major Question Types</BackButton>
-                <LessonTitle>Agreeing & Disagreeing</LessonTitle>
-
-                <Section>
-                    <SectionHeader>🤝 Communication Strategies</SectionHeader>
-                    <BodyText>
-                        During the exam, you should show that you have listened to and evaluated what your group members have said. One way of doing so is to <strong>agree</strong> or <strong>disagree</strong> with others' opinions.
-                    </BodyText>
-                </Section>
-                
-                <Section>
-                    <SectionHeader>💬 Example Discussion: Air Pollution</SectionHeader>
-                    <BodyText>These students are discussing the problem of air pollution in Hong Kong. Look at how they support their opinions with a reason.</BodyText>
-                    <DialogueGrid>
-                        <DialogueCard>
-                            <DialogueHeader><span className="icon">🤔</span>Student A starts:</DialogueHeader>
-                            <DialogueText>"I think the Hong Kong government should do more to address the problem of air pollution."</DialogueText>
-                        </DialogueCard>
-                        <DialogueCard>
-                            <DialogueHeader><span className="icon">👍</span>Student B agrees:</DialogueHeader>
-                            <DialogueText><strong>"I agree.</strong> Bad air quality is a serious health risk for everyone living in Hong Kong."</DialogueText>
-                        </DialogueCard>
-                        <DialogueCard>
-                            <DialogueHeader><span className="icon">💡</span>Student C gives reasons:</DialogueHeader>
-                            <DialogueText>"In order to improve air quality, the government could encourage people to switch to electric vehicles by offering them subsidies. They could also stop people from buying petrol vehicles by implementing heavy taxes on petrol."</DialogueText>
-                        </DialogueCard>
-                        <DialogueCard>
-                            <DialogueHeader><span className="icon">👎</span>Student D disagrees:</DialogueHeader>
-                            <DialogueText><strong>"I don't think that's a good idea.</strong> Even with government subsidies, electric vehicles will still be too expensive for many people. Also, there are not enough charging stations in the city, so this idea may not be practical."</DialogueText>
-                        </DialogueCard>
-                    </DialogueGrid>
-                </Section>
-                
-                <Section>
-                    <SectionHeader>✨ Useful Expressions</SectionHeader>
-                    <ExpressionsGrid>
-                        <ExpressionCard borderColor="#27ae60">
-                            <CardHeader bgColor="#e8f5e9" color="#2e7d32">Strong Agreement</CardHeader>
-                            <PhraseList>
-                                {strongAgreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
-                            </PhraseList>
-                        </ExpressionCard>
-                        <ExpressionCard borderColor="#c0392b">
-                            <CardHeader bgColor="#fdeded" color="#c0392b">Strong Disagreement</CardHeader>
-                            <PhraseList>
-                                {strongDisagreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
-                            </PhraseList>
-                        </ExpressionCard>
-                         <ExpressionCard borderColor="#27ae60">
-                            <CardHeader bgColor="#e8f5e9" color="#2e7d32">Weak Agreement</CardHeader>
-                            <PhraseList>
-                                {weakAgreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
-                            </PhraseList>
-                        </ExpressionCard>
-                         <ExpressionCard borderColor="#c0392b">
-                            <CardHeader bgColor="#fdeded" color="#c0392b">Weak Disagreement</CardHeader>
-                            <PhraseList>
-                                {weakDisagreement.map(phrase => <PhraseItem key={phrase}>{phrase}</PhraseItem>)}
-                            </PhraseList>
-                        </ExpressionCard>
-                    </ExpressionsGrid>
-                </Section>
-            </Container>
+            {view === 'agreeDisagree' ? <AgreeDisagreePage /> : <AcknowledgingOpinionsPage />}
         </ThemeProvider>
     );
 };

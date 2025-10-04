@@ -4,7 +4,7 @@
 */
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
+import { BackButton, LessonTitle } from '../Structures/SVOContent.styles';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -199,14 +199,13 @@ const WordBox = styled.div`
 // --- Component ---
 interface AcknowledgingOpinionsContentProps {
     onBack: () => void;
-    onNext: () => void;
     themeColor: string;
 }
 
-export const AcknowledgingOpinionsContent: React.FC<AcknowledgingOpinionsContentProps> = ({ onBack, onNext, themeColor }) => {
+export const AcknowledgingOpinionsContent: React.FC<AcknowledgingOpinionsContentProps> = ({ onBack, themeColor }) => {
     return (
         <Container>
-            <BackButton onClick={onBack} themeColor={themeColor}>← Back to Group Interaction Skills</BackButton>
+            <BackButton onClick={onBack} themeColor={themeColor}>← Back to 5 Major Question Types</BackButton>
             <LessonTitle>Acknowledging Others' Opinions</LessonTitle>
             
             <SectionWrapper>
@@ -292,13 +291,6 @@ export const AcknowledgingOpinionsContent: React.FC<AcknowledgingOpinionsContent
                     </ul>
                 </WordBox>
             </SectionWrapper>
-
-            <NextButtonContainer>
-                <NextButton onClick={onNext} themeColor={themeColor}>
-                    <span>Next: Concluding Techniques</span>
-                    <span className="arrow">→</span>
-                </NextButton>
-            </NextButtonContainer>
         </Container>
     );
 };

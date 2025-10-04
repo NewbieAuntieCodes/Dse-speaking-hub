@@ -3,6 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { createGlobalStyle } from 'styled-components';
+// Fix: Add styled-components module declaration to include theme types.
+import 'styled-components';
+
+declare module 'styled-components' {
+  export interface DefaultTheme {
+    mainColor: string;
+  }
+}
 
 // --- Global Styles ---
 export const GlobalStyle = createGlobalStyle`
