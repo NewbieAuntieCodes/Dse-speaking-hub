@@ -2,7 +2,8 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+// Fix: Corrected the import for React hooks to resolve reference errors.
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 import { DragAndDropExercise } from '../../practice/DragAndDropExercise';
@@ -240,6 +241,103 @@ const ExamplePrompt = styled.div<{ themeColor: string }>`
     }
 `;
 
+// --- START: Redesigned Vocabulary Appendix Styles ---
+const AppendixWrapper = styled(SectionWrapper)`
+  margin-top: 40px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+  border-top: 4px solid ${props => props.themeColor || '#4a90e2'};
+`;
+
+const AppendixTitle = styled(SectionTitle)`
+  border-bottom-color: #e0e6ed;
+`;
+
+const VocabGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+`;
+
+const VocabCard = styled.div<{ themeColor: string }>`
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-top: 4px solid ${props => props.themeColor || '#4a90e2'};
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  }
+`;
+
+const VocabTerm = styled.div<{ themeColor: string }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f3f5;
+
+  h5 {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: ${props => props.themeColor || '#2c3e50'};
+    margin: 0;
+  }
+
+  span {
+    font-style: normal;
+    color: #566573;
+    font-size: 0.85em;
+    font-weight: 600;
+    background-color: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+`;
+
+const VocabDefinition = styled.div<{ themeColor: string }>`
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  flex-grow: 1;
+
+  &::before {
+    content: '❞';
+    font-size: 1.4em;
+    color: ${props => props.themeColor || '#4a90e2'};
+    font-weight: bold;
+    margin-top: 0;
+  }
+`;
+
+const VocabExample = styled.div<{ themeColor: string }>`
+  background-color: ${props => props.themeColor}1a;
+  border-left: 3px solid ${props => props.themeColor || '#4a90e2'};
+  padding: 12px 18px;
+  border-radius: 0 8px 8px 0;
+  color: #566573;
+  font-size: 0.95em;
+  line-height: 1.6;
+  font-style: italic;
+  margin-top: auto;
+
+  strong {
+    font-weight: bold;
+    color: #34495e;
+    font-style: normal;
+  }
+`;
+// --- END: Redesigned Vocabulary Appendix Styles ---
+
+
 // --- Practice Navigator Component ---
 interface PracticeNavigatorProps {
     practice1: (onComplete: () => void) => React.ReactNode;
@@ -281,6 +379,15 @@ const PracticeNavigator: React.FC<PracticeNavigatorProps> = ({ practice1, practi
         </div>
     );
 };
+
+// --- Vocabulary Data ---
+const vocabularyData = [
+    { word: 'advantages', type: 'noun', definition: '好处；优点', example: 'One of the main <strong>advantages</strong> of group study is learning from your peers.' },
+    { word: 'attending', type: 'verb', definition: '参加；出席', example: '<strong>Attending</strong> extra tutorial classes can help you prepare for the DSE exam.' },
+    { word: 'cons', type: 'noun', definition: '坏处；缺点 (常与 pros 连用)', example: 'We need to weigh the pros and <strong>cons</strong> before deciding to study abroad.' },
+    { word: 'pros', type: 'noun', definition: '好处；优点 (常与 cons 连用)', example: "Let's discuss the <strong>pros</strong> and cons of online learning." },
+    { word: 'tutorial', type: 'noun', definition: '辅导班；导师辅导课', example: 'Many students join a <strong>tutorial</strong> to improve their English speaking skills.' }
+];
 
 // --- Child Component for Opening Method ---
 const OpeningMethodContent: React.FC<{ onBack: () => void; onNext: () => void; themeColor: string }> = ({ onBack, onNext, themeColor }) => {
@@ -380,6 +487,31 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; onNext: () => void; t
                     practice2={<RoleplayExercise themeColor={themeColor} />}
                 />
             </SectionWrapper>
+
+            <AppendixWrapper themeColor={themeColor}>
+                <AppendixTitle themeColor={themeColor}>
+                    <span className="icon">📖</span>
+                    单词附录 (Vocabulary Appendix)
+                </AppendixTitle>
+                <VocabGrid>
+                    {vocabularyData.map(item => (
+                        <VocabCard key={item.word} themeColor={themeColor}>
+                            <VocabTerm themeColor={themeColor}>
+                                <h5>{item.word}</h5>
+                                <span>{item.type}</span>
+                            </VocabTerm>
+                            <VocabDefinition themeColor={themeColor}>
+                                {item.definition}
+                            </VocabDefinition>
+                            <VocabExample
+                                themeColor={themeColor}
+                                dangerouslySetInnerHTML={{ __html: item.example }}
+                            />
+                        </VocabCard>
+                    ))}
+                </VocabGrid>
+            </AppendixWrapper>
+            
             <NextButtonContainer>
                 <NextButton onClick={onNext} themeColor={themeColor}>
                     <span>Next: The PRE Structure</span>
@@ -389,6 +521,22 @@ const OpeningMethodContent: React.FC<{ onBack: () => void; onNext: () => void; t
         </Container>
     );
 };
+
+// --- Vocabulary Data for PRE Structure ---
+const vocabularyDataForPRE = [
+    { word: 'deal with', type: 'phrasal verb', definition: '处理；应付', example: 'It\'s important to learn how to <strong>deal with</strong> stress during exams.' },
+    { word: 'cope with', type: 'phrasal verb', definition: '应对；处理', example: 'She had some problems <strong>coping with</strong> her heavy workload.' },
+    { word: 'received', type: 'verb', definition: '收到；接到', example: 'He <strong>received</strong> a lot of positive feedback on his presentation.' },
+    { word: 'feedback', type: 'noun', definition: '反馈意见', example: 'Constructive <strong>feedback</strong> is essential for improvement.' },
+    { word: 'study tips', type: 'noun phrase', definition: '学习技巧', example: 'My teacher gave me some useful <strong>study tips</strong> for the history exam.' },
+    { word: 'relaxation', type: 'noun', definition: '放松；松弛', example: 'Balancing work with <strong>relaxation</strong> helps relieve stress.' },
+    { word: 'relieve', type: 'verb', definition: '减轻；缓解', example: 'Listening to music can help <strong>relieve</strong> anxiety.' },
+    { word: 'scheduling', type: 'verb/noun', definition: '安排时间；日程表', example: '<strong>Scheduling</strong> regular study breaks can improve focus.' },
+    { word: 'stress', type: 'noun', definition: '压力', example: 'Many students feel a lot of <strong>stress</strong> before their final exams.' },
+    { word: 'pressure', type: 'noun', definition: '压力', example: 'Young people often face immense peer <strong>pressure</strong>.' },
+    { word: 'take a break', type: 'phrase', definition: '休息一下', example: 'You should <strong>take a break</strong> from studying if you feel tired.' },
+    { word: 'recharge', type: 'verb', definition: '充电；恢复精力', example: 'A short holiday is a great way to <strong>recharge</strong> your batteries.' }
+];
 
 // --- Child Component for PRE Structure ---
 const PreStructureContent: React.FC<{ onBack: () => void; onNext: () => void; themeColor: string }> = ({ onBack, onNext, themeColor }) => {
@@ -478,6 +626,31 @@ const PreStructureContent: React.FC<{ onBack: () => void; onNext: () => void; th
                     </ExampleBubble>
                 </ExampleAnalysisContainer>
             </SectionWrapper>
+
+            <AppendixWrapper themeColor={themeColor}>
+                <AppendixTitle themeColor={themeColor}>
+                    <span className="icon">📖</span>
+                    单词附录 (Vocabulary Appendix)
+                </AppendixTitle>
+                <VocabGrid>
+                    {vocabularyDataForPRE.map(item => (
+                        <VocabCard key={item.word} themeColor={themeColor}>
+                            <VocabTerm themeColor={themeColor}>
+                                <h5>{item.word}</h5>
+                                <span>{item.type}</span>
+                            </VocabTerm>
+                            <VocabDefinition themeColor={themeColor}>
+                                {item.definition}
+                            </VocabDefinition>
+                            <VocabExample
+                                themeColor={themeColor}
+                                dangerouslySetInnerHTML={{ __html: item.example }}
+                            />
+                        </VocabCard>
+                    ))}
+                </VocabGrid>
+            </AppendixWrapper>
+
             <NextButtonContainer>
                 <NextButton onClick={onNext} themeColor={themeColor}>
                     <span>Next: Concluding Techniques</span>
@@ -499,6 +672,10 @@ type View = 'list' | 'opening' | 'pre' | 'concluding' | 'example' | 'questionTyp
 // --- Main Component (now a router) ---
 export const GroupInteractionContent: React.FC<GroupInteractionContentProps> = ({ onBack, onNext, themeColor }) => {
     const [view, setView] = useState<View>('list');
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
 
     if (view === 'opening') {
         return <OpeningMethodContent onBack={() => setView('list')} onNext={() => setView('pre')} themeColor={themeColor} />;

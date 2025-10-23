@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BackButton, LessonTitle } from '../Structures/SVOContent.styles';
 import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '../Structures/StructuresContent.styles';
 import { GroupInteractionContent } from './GroupInteractionContent';
@@ -17,6 +17,10 @@ type View = 'list' | 'group' | 'individual';
 
 export const AnsweringSkillsContent: React.FC<AnsweringSkillsContentProps> = ({ onBack, themeColor }) => {
     const [view, setView] = useState<View>('list');
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
 
     if (view === 'group') {
         // Fix: Pass onNext prop to navigate to the individual response view.

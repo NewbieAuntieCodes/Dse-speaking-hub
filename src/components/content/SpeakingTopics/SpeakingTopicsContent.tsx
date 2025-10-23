@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cardDataConfig } from '../../../data/definitions';
 import { TopicsIcon } from '../../../data/icons';
 import { ContentHeader, ContentIcon, ContentTitle, ContentSubtitle } from '../../../styles/shared';
@@ -21,6 +21,10 @@ const topics = [
 export const SpeakingTopicsContent: React.FC = () => {
     const [view, setView] = useState<'list' | 'environment'>('list');
     const themeColor = cardDataConfig.find(card => card.id === 'topics')?.color || '#50e3c2';
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
 
     const handleTopicClick = (topicId: string, title: string) => {
         if (topicId === 'env') {

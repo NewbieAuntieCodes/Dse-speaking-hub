@@ -4,7 +4,12 @@
 */
 import React, { useState } from 'react';
 import styled, { keyframes, ThemeProvider } from 'styled-components';
-import { BackButton as OriginalBackButton, LessonTitle as OriginalLessonTitle } from '../Structures/SVOContent.styles';
+import {
+    BackButton as OriginalBackButton,
+    LessonTitle as OriginalLessonTitle,
+    NextButton,
+    NextButtonContainer
+} from '../Structures/SVOContent.styles';
 
 // --- Animations ---
 const fadeIn = keyframes`
@@ -188,20 +193,21 @@ const ExpressionsContainer = styled.div`
     gap: 15px;
 `;
 
-const ExpressionPill = styled.div`
-    background-color: #f1f3f5;
-    color: #495057;
-    border: 1px solid #ced4da;
+const ExpressionPill = styled.div<{ color: string, bgColor: string }>`
+    background-color: ${props => props.bgColor};
+    color: ${props => props.color};
+    border: 1px solid ${props => props.color}80;
     padding: 10px 20px;
     border-radius: 50px;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.2s ease;
     cursor: default;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        filter: brightness(1.05);
     }
 `;
 
@@ -372,44 +378,53 @@ const suggestions = [
     }
 ];
 
-const expressions = [
-    'How about ...?', 'What about if ...?', 'Shall we ...?', 'Let\'s ...',
-    'Perhaps he/she should ...', 'He/she could think about ...',
-    'I suggest ...', 'Maybe we can consider ...',
+const expressionGroups = [
+    {
+        color: '#3498db', // Blue for questions
+        phrases: ['How about ...?', 'What about if ...?', 'Shall we ...?']
+    },
+    {
+        color: '#2ecc71', // Green for direct/modal suggestions
+        phrases: ['Let\'s ...', 'Perhaps he/she should ...', 'He/she could think about ...']
+    },
+    {
+        color: '#e67e22', // Orange for formal suggestions
+        phrases: ['I suggest ...', 'Maybe we can consider ...']
+    }
 ];
 
 const practiceItems = [
     { 
         icon: '☕', 
         title: 'Coffee Shops', 
-        description: 'Serve hot and cold drinks and snacks. You can spend as much time there as you like.',
+        description: 'Coffee shops serve hot and cold drinks and snacks. They are inexpensive and you can spend as much time there as you like.',
         color: '#f9f3ef',
         preAnswer: {
-            point: "How about we go to a coffee shop after school?",
-            reason: "It's a great place to relax. We can grab some drinks and snacks, and there's no pressure to leave quickly.",
-            experience: "For example, last week I went to the Starbucks nearby. I was able to finish my homework and chat with friends for a couple of hours. It was really chill."
+            point: "I think going to a coffee shop would be a good idea.",
+            reason: "Because it is inexpensive, and the atmosphere is quiet and comfortable, so we can spend time together.",
+            experience: "For example, last week I went to a coffee shop near my school. It had nice drinks and snacks, and we could sit and chat for a long time."
         }
     },
     { 
         icon: '📚', 
         title: 'Libraries', 
-        description: 'Offer free space to relax and read books. Computers are available to check email or surf the Internet.',
+        description: 'Libraries offer the public a free space to relax and read books. There are also computers available for you to check your email or surf the Internet.',
         color: '#eef5f9',
         preAnswer: {
-            point: "I suggest we could hang out at the public library.",
-            reason: "The main reason is that it's completely free. It's quiet, so we can read or study, and they have computers if we need to use the internet for a project.",
-            experience: "I remember when we had to do research for our history project, the library was a lifesaver. We found so many books and used their computers to put everything together."
+            point: "We could go to the library after school.",
+            reason: "Because it is free, and we can relax, read books, or use the computers there.",
+            experience: "For example, the Central Library has many books and also computers, so we can read or search for information together."
         }
     },
     { 
         icon: '🌳', 
         title: 'Hong Kong Park', 
-        description: 'A spacious and beautiful park, and a free place to go with friends. Bring snacks for a picnic on a sunny day.',
+        description: 'Hong Kong Park is a spacious and beautiful park, and a free place to go with friends. Bring snacks or a picnic on a sunny day.',
         color: '#f0f9f4',
         preAnswer: {
-            point: "Why don't we go to Hong Kong Park for a picnic this weekend?",
-            reason: "It's a beautiful and spacious park, which is perfect for a group of friends. Plus, it won't cost us anything except for the snacks we bring.",
-            experience: "My family had a picnic there last month. It was a sunny day, and we just laid on the grass, ate sandwiches, and played some games. It was a really refreshing break."
+            point: "What about going to Hong Kong Park?",
+            reason: "Because it is spacious, beautiful, and free. We can enjoy nature and have fun outdoors.",
+            experience: "For example, we could bring some snacks for a picnic and walk around in the sunshine."
         }
     },
     {
@@ -442,10 +457,11 @@ const renderSuggestionText = (fullText: string, highlight: string) => {
 // --- Component ---
 interface MakingSuggestionsContentProps {
     onBack: () => void;
+    onNext: () => void;
     themeColor: string;
 }
 
-export const MakingSuggestionsContent: React.FC<MakingSuggestionsContentProps> = ({ onBack, themeColor }) => {
+export const MakingSuggestionsContent: React.FC<MakingSuggestionsContentProps> = ({ onBack, onNext, themeColor }) => {
     const [showAnswers, setShowAnswers] = useState<Record<string, boolean>>({});
 
     const toggleAnswer = (title: string) => {
@@ -468,7 +484,7 @@ export const MakingSuggestionsContent: React.FC<MakingSuggestionsContentProps> =
                     </SectionHeader>
                     <ScenarioIntro>
                         In the speaking exam, you may be asked to <Highlight>make suggestions</Highlight> or <Highlight>give advice</Highlight> on an issue.
-                        These students are discussing what their classmate Jack can do to stop being jealous of his sister who is very popular at school and always gets good grades. Look at how they make suggestions on the topic:
+                        <strong> These students are discussing what their classmate Jack can do to stop being jealous of his sister who is very popular at school and always gets good grades.</strong> Look at how they make suggestions on the topic:
                     </ScenarioIntro>
                     <SuggestionsGrid>
                         {suggestions.map((s) => (
@@ -490,13 +506,13 @@ export const MakingSuggestionsContent: React.FC<MakingSuggestionsContentProps> =
                         <p><strong>Golden Rule: Explain Your Reasons!</strong>When giving suggestions, you should always state your reasons, explaining why you think your ideas are good ones.</p>
                     </PrinciplesBox>
                     <ExpressionsContainer>
-                        {expressions.map(text => {
-                            return (
-                                <ExpressionPill key={text}>
-                                    {text.replace(' (formal)', '')}
+                        {expressionGroups.map((group) =>
+                            group.phrases.map(text => (
+                                <ExpressionPill key={text} color={group.color} bgColor={`${group.color}20`}>
+                                    {text}
                                 </ExpressionPill>
-                            );
-                        })}
+                            ))
+                        )}
                     </ExpressionsContainer>
                     <GrammarTip>
                         <span className="icon" role="img" aria-label="tools icon">🔧</span>
@@ -548,6 +564,12 @@ export const MakingSuggestionsContent: React.FC<MakingSuggestionsContentProps> =
                     </PracticeGrid>
                 </Section>
 
+                <NextButtonContainer>
+                    <NextButton onClick={onNext} themeColor={themeColor}>
+                        <span>Next: Making & Explaining Choices</span>
+                        <span className="arrow">→</span>
+                    </NextButton>
+                </NextButtonContainer>
             </Container>
         </ThemeProvider>
     );

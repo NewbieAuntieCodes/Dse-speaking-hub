@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 import { createGlobalStyle } from 'styled-components';
-// Fix: Add styled-components module declaration to include theme types.
-import 'styled-components';
 
+// Fix: The side-effect import for 'styled-components' is not necessary for module augmentation
+// as this file is already a module due to other imports/exports. Removing the redundant import.
 declare module 'styled-components' {
   export interface DefaultTheme {
     mainColor: string;

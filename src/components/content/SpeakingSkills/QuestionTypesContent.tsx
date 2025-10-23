@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
 import { MakingSuggestionsContent } from './MakingSuggestionsContent';
@@ -147,10 +147,15 @@ type View = 'list' | 'suggestions' | 'choices' | 'arguing';
 export const QuestionTypesContent: React.FC<QuestionTypesContentProps> = ({ onBack, onNext, themeColor }) => {
     const [view, setView] = useState<View>('list');
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
+
     const suggestionsCardData = questionTypes.find(type => type.id === 'suggestions');
     if (view === 'suggestions' && suggestionsCardData) {
         return <MakingSuggestionsContent 
-            onBack={() => setView('list')} 
+            onBack={() => setView('list')}
+            onNext={() => setView('choices')}
             themeColor={suggestionsCardData.borderColor} 
         />;
     }

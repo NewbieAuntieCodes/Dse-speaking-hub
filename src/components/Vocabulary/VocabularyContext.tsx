@@ -58,7 +58,7 @@ export const VocabularyProvider: React.FC<VocabularyProviderProps> = ({ children
 
     const addWord = (word: string) => {
         if (!words.includes(word)) {
-            setWords(prevWords => [...prevWords, word].sort());
+            setWords(prevWords => [...prevWords, word]);
             showToast(`已添加: "${word}"`);
         } else {
             showToast(`"${word}" 已在单词本中`);

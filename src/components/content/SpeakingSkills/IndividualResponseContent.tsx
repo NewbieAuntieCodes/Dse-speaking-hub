@@ -2,24 +2,14 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { BackButton, LessonTitle, NextButtonContainer, NextButton } from '../Structures/SVOContent.styles';
+import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Structures/SVOContent.styles';
+import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '../Structures/StructuresContent.styles';
+import { GivingSuggestionsContent } from './GivingSuggestionsContent';
+import { MakingChoicesIndividualContent } from './MakingChoicesIndividualContent';
 
-const PlaceholderCard = styled.div`
-    background: white;
-    border-radius: 15px;
-    padding: 50px 30px;
-    margin-top: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    text-align: center;
-`;
-
-const PlaceholderText = styled.p`
-    font-size: 1.2em;
-    color: #7f8c8d;
-    font-style: italic;
-`;
+const Container = styled.div``;
 
 interface IndividualResponseContentProps {
     onBack: () => void;
@@ -27,20 +17,43 @@ interface IndividualResponseContentProps {
     themeColor: string;
 }
 
+type View = 'list' | 'suggestions' | 'choices';
+
 export const IndividualResponseContent: React.FC<IndividualResponseContentProps> = ({ onBack, onReturn, themeColor }) => {
+    const [view, setView] = useState<View>('list');
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
+
+    if (view === 'suggestions') {
+        return <GivingSuggestionsContent onBack={() => setView('list')} onReturn={onReturn} themeColor={themeColor} />;
+    }
+
+    if (view === 'choices') {
+        return <MakingChoicesIndividualContent onBack={() => setView('list')} onReturn={onReturn} themeColor={themeColor} />;
+    }
+
     return (
-        <div>
+        <Container>
             <BackButton onClick={onBack} themeColor={themeColor}>← Back to Skills Menu</BackButton>
             <LessonTitle>个人回应技巧 (Individual Response)</LessonTitle>
-            <PlaceholderCard>
-                <PlaceholderText>Content for individual response skills coming soon!</PlaceholderText>
-            </PlaceholderCard>
+            <LessonList>
+                <LessonItem borderColor={themeColor} onClick={() => setView('suggestions')}>
+                    <LessonTitleChinese>Giving suggestions and advice</LessonTitleChinese>
+                    <LessonTitleEnglish>提供建议和意见</LessonTitleEnglish>
+                </LessonItem>
+                <LessonItem borderColor={themeColor} onClick={() => setView('choices')}>
+                    <LessonTitleChinese>Making and explaining choices</LessonTitleChinese>
+                    <LessonTitleEnglish>做出和解释选择</LessonTitleEnglish>
+                </LessonItem>
+            </LessonList>
             <NextButtonContainer>
                 <NextButton onClick={onReturn} themeColor={themeColor}>
                     <span>Return to Skills Menu</span>
                     <span className="arrow">↩</span>
                 </NextButton>
             </NextButtonContainer>
-        </div>
+        </Container>
     );
 };

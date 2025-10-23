@@ -162,25 +162,6 @@ const AcknowledgingSectionTitle = styled.h3<{ themeColor: string }>`
     }
 `;
 
-const DiscussionFlow = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    margin-top: 30px;
-`;
-
-const StepLabel = styled.div<{ themeColor: string }>`
-    background-color: #f0f2f5;
-    color: #4a5568;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    display: inline-block;
-    border: 2px solid ${props => props.themeColor}33;
-    margin-bottom: 15px;
-`;
-
 const SpeechBubble = styled.div`
     background: #e9ecef;
     border-radius: 20px;
@@ -210,48 +191,6 @@ const SpeechBubble = styled.div`
         padding: 2px 5px;
         border-radius: 4px;
         border-bottom: 2px solid #ffe58f;
-    }
-`;
-
-const ExampleGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 25px;
-`;
-
-const ExampleCard = styled.div`
-    background-color: #f8f9fa;
-    border-radius: 15px;
-    padding: 25px;
-    border: 1px solid #e9ecef;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-`;
-
-const DialoguePart = styled.div<{ themeColor: string }>`
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    line-height: 1.7;
-    color: #34495e;
-
-    .number {
-        background-color: ${props => props.themeColor};
-        color: white;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.9em;
-    }
-
-    .text {
-        flex: 1;
     }
 `;
 
@@ -308,6 +247,39 @@ const WordBox = styled.div`
         border-radius: 20px;
         font-weight: 500;
     }
+`;
+
+// New styled components for the dialogue
+const StudentDialogueContainer = styled.div`
+    margin-top: 25px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
+
+const StudentTurn = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+`;
+
+const StudentLabel = styled.div`
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #34495e;
+`;
+
+const StudentText = styled.p`
+    font-size: 1.05em;
+    color: #4a5568;
+    line-height: 1.7;
+    padding-left: 10px;
+    border-left: 3px solid #ced4da;
+    margin: 0;
 `;
 
 
@@ -414,65 +386,36 @@ export const ArguingPositionContent: React.FC<ArguingPositionContentProps> = ({ 
         
             <Section>
                 <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
-                    <span className="icon">👂</span> Why Acknowledge?
-                </AcknowledgingSectionTitle>
-                <BodyText>
-                    During the Group Interaction, if you are not sure whether to agree or disagree with other students, you can acknowledge others' opinions before expressing your own. This shows you are an active listener and helps the conversation flow smoothly.
-                </BodyText>
-            </Section>
-            
-            <Section>
-                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
                     <span className="icon">💬</span> Example Discussion: Beach Clean-up
                 </AcknowledgingSectionTitle>
                 <BodyText>These students are discussing how to organize a beach clean-up day at Tap Mun.</BodyText>
                 
-                <DiscussionFlow>
-                    <div>
-                        <StepLabel themeColor={acknowledgingThemeColor}>① Acknowledging other speakers' point</StepLabel>
-                        <SpeechBubble>
+                <StudentDialogueContainer>
+                    <StudentTurn>
+                        <StudentLabel>Student A:</StudentLabel>
+                        <StudentText>
                             Our environmental club is organizing a beach clean-up day at Tap Mun. We'll need to stock up on bin bags and plastic gloves, and the school will help organize transport. The school should make this event mandatory for students. Everyone will learn from it and we'll clean the beach up faster.
-                        </SpeechBubble>
-                    </div>
-                    <div>
-                        <StepLabel themeColor={acknowledgingThemeColor}>② Expressing a further opinion</StepLabel>
-                        <SpeechBubble>
-                            <strong>You have a point there.</strong> Students who don't usually care about the environment will see how big the problem is.
-                        </SpeechBubble>
-                    </div>
-                </DiscussionFlow>
-            </Section>
-
-            <Section>
-                <AcknowledgingSectionTitle themeColor={acknowledgingThemeColor}>
-                    <span className="icon">🔎</span> Deeper Analysis
-                </AcknowledgingSectionTitle>
-                <ExampleGrid>
-                    <ExampleCard>
-                        <DialoguePart themeColor={acknowledgingThemeColor}>
-                            <span className="number">1</span>
-                            <span className="text">I hear what you're saying,</span>
-                        </DialoguePart>
-                        <DialoguePart themeColor={acknowledgingThemeColor}>
-                            <span className="number">2</span>
-                            <span className="text">but I'm not sure if forcing students to participate is a good idea. They might <strong>resent</strong> it, and students with allergies or disabilities could feel left out.</span>
-                        </DialoguePart>
-                        <VocabBox>
-                            <div><strong>resent</strong> = to feel bitter or angry about something, especially because you feel it is unfair</div>
-                        </VocabBox>
-                    </ExampleCard>
-
-                    <ExampleCard>
-                        <DialoguePart themeColor={acknowledgingThemeColor}>
-                            <span className="number">1</span>
-                            <span className="text">I see what you mean.</span>
-                        </DialoguePart>
-                        <DialoguePart themeColor={acknowledgingThemeColor}>
-                            <span className="number">2</span>
-                            <span className="text">I think it would be OK if the beach clean-up was optional, though. It's a day off school, so lots of students should be interested in joining us.</span>
-                        </DialoguePart>
-                    </ExampleCard>
-                </ExampleGrid>
+                        </StudentText>
+                    </StudentTurn>
+                    <StudentTurn>
+                        <StudentLabel>Student B:</StudentLabel>
+                        <StudentText>
+                            You have a point there. Students who don't usually care about the environment will see how big the problem is.
+                        </StudentText>
+                    </StudentTurn>
+                    <StudentTurn>
+                        <StudentLabel>Student C:</StudentLabel>
+                        <StudentText>
+                            I hear what you're saying, but I'm not sure if forcing students to participate is a good idea. They might resent it, and students with allergies or disabilities could feel left out.
+                        </StudentText>
+                    </StudentTurn>
+                    <StudentTurn>
+                        <StudentLabel>Student D:</StudentLabel>
+                        <StudentText>
+                            I see what you mean. I think it would be OK if the beach clean-up was optional, though. It's a day off school, so lots of students should be interested in joining us.
+                        </StudentText>
+                    </StudentTurn>
+                </StudentDialogueContainer>
             </Section>
             
             <Section>

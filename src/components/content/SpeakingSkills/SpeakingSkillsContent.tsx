@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { cardDataConfig } from '../../../data/definitions';
 import { ExamIntroductionContent } from './ExamIntroductionContent';
@@ -16,7 +16,7 @@ const SkillsPageContainer = styled.div`
 `;
 
 const SkillsHeader = styled.header`
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 `;
 
 const IconWrapper = styled.div`
@@ -39,7 +39,7 @@ const SubTitle = styled.p`
 const SkillsCardGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 20px;
     max-width: 1000px;
     margin: 0 auto;
 `;
@@ -104,6 +104,10 @@ type View = 'list' | 'introduction' | 'group' | 'individual';
 export const SpeakingSkillsContent: React.FC = () => {
     const [view, setView] = useState<View>('list');
     const themeColor = cardDataConfig.find(card => card.id === 'skills')?.color || '#4a90e2';
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
 
     if (view === 'introduction') {
         return <ExamIntroductionContent onBack={() => setView('list')} onNext={() => setView('group')} themeColor={themeColor} />;
