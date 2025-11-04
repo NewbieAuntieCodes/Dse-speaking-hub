@@ -2,10 +2,11 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
+// Fix: Add a side-effect import to ensure this file is treated as a module, allowing
+// TypeScript to correctly apply the module augmentation for 'styled-components'.
+import 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 
-// Fix: The side-effect import for 'styled-components' is not necessary for module augmentation
-// as this file is already a module due to other imports/exports. Removing the redundant import.
 declare module 'styled-components' {
   export interface DefaultTheme {
     mainColor: string;

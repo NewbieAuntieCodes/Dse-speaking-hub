@@ -335,25 +335,25 @@ export const ExamIntroductionContent: React.FC<ExamIntroductionContentProps> = (
 
             <SubTitle>📊 评分标准（主要四方面）</SubTitle>
             <MarkingGrid>
-                <MarkingCard themeColor="#3498db">
-                    <MarkingIcon>💡</MarkingIcon>
-                    <MarkingTitle>内容 (Ideas & Organisation)</MarkingTitle>
-                    <MarkingDescription>观点是否相关、有条理。</MarkingDescription>
+                <MarkingCard themeColor="#9b59b6">
+                    <MarkingIcon>🎤</MarkingIcon>
+                    <MarkingTitle>Pronunciation & delivery</MarkingTitle>
+                    <MarkingDescription>是否清楚、自然、自信。</MarkingDescription>
                 </MarkingCard>
                 <MarkingCard themeColor="#2ecc71">
                     <MarkingIcon>💬</MarkingIcon>
-                    <MarkingTitle>互动 (Communication & Interaction)</MarkingTitle>
+                    <MarkingTitle>Communication strategies</MarkingTitle>
                     <MarkingDescription>能否合作交流，回应他人。</MarkingDescription>
                 </MarkingCard>
-                 <MarkingCard themeColor="#e67e22">
+                <MarkingCard themeColor="#e67e22">
                     <MarkingIcon>🗣️</MarkingIcon>
-                    <MarkingTitle>语言 (Language)</MarkingTitle>
+                    <MarkingTitle>Vocabulary & language patterns</MarkingTitle>
                     <MarkingDescription>词汇、语法、句型是否合适。</MarkingDescription>
                 </MarkingCard>
-                 <MarkingCard themeColor="#9b59b6">
-                    <MarkingIcon>🎤</MarkingIcon>
-                    <MarkingTitle>发音 (Pronunciation & Delivery)</MarkingTitle>
-                    <MarkingDescription>是否清楚、自然、自信。</MarkingDescription>
+                <MarkingCard themeColor="#3498db">
+                    <MarkingIcon>💡</MarkingIcon>
+                    <MarkingTitle>Ideas & organization</MarkingTitle>
+                    <MarkingDescription>观点是否相关、有条理。</MarkingDescription>
                 </MarkingCard>
             </MarkingGrid>
 

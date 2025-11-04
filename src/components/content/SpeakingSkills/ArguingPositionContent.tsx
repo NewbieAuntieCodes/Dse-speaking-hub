@@ -145,6 +145,13 @@ const PhraseItem = styled.li`
 `;
 
 // --- Styled components for "Acknowledging Opinions" section ---
+const AcknowledgingPhrase = styled.strong<{ color: string }>`
+    background-color: ${props => props.color}20;
+    color: ${props => props.color};
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+`;
 
 const AcknowledgingSectionTitle = styled.h3<{ themeColor: string }>`
     font-size: 1.6em;
@@ -400,19 +407,19 @@ export const ArguingPositionContent: React.FC<ArguingPositionContentProps> = ({ 
                     <StudentTurn>
                         <StudentLabel>Student B:</StudentLabel>
                         <StudentText>
-                            You have a point there. Students who don't usually care about the environment will see how big the problem is.
+                            <AcknowledgingPhrase color="#27ae60">You have a point there.</AcknowledgingPhrase> Students who don't usually care about the environment will see how big the problem is.
                         </StudentText>
                     </StudentTurn>
                     <StudentTurn>
                         <StudentLabel>Student C:</StudentLabel>
                         <StudentText>
-                            I hear what you're saying, but I'm not sure if forcing students to participate is a good idea. They might resent it, and students with allergies or disabilities could feel left out.
+                            <AcknowledgingPhrase color="#e67e22">I hear what you're saying,</AcknowledgingPhrase> but I'm not sure if forcing students to participate is a good idea. They might resent it, and students with allergies or disabilities could feel left out.
                         </StudentText>
                     </StudentTurn>
                     <StudentTurn>
                         <StudentLabel>Student D:</StudentLabel>
                         <StudentText>
-                            I see what you mean. I think it would be OK if the beach clean-up was optional, though. It's a day off school, so lots of students should be interested in joining us.
+                            <AcknowledgingPhrase color="#e67e22">I see what you mean.</AcknowledgingPhrase> I think it would be OK if the beach clean-up was optional, though. It's a day off school, so lots of students should be interested in joining us.
                         </StudentText>
                     </StudentTurn>
                 </StudentDialogueContainer>
