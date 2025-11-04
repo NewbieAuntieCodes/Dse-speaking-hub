@@ -2,16 +2,10 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-// Fix: Removed the redundant side-effect import for 'styled-components'.
-// The file is already treated as a module due to other imports and exports,
-// and this import was causing a module resolution error for the augmentation.
 import { createGlobalStyle } from 'styled-components';
 
-declare module 'styled-components' {
-  export interface DefaultTheme {
-    mainColor: string;
-  }
-}
+// Fix: Removed the unused 'styled-components' module augmentation which was causing a 'module not found' error.
+// The DefaultTheme was not used anywhere in the application.
 
 // --- Global Styles ---
 export const GlobalStyle = createGlobalStyle`
