@@ -8,6 +8,7 @@ import { BackButton, LessonTitle, NextButton, NextButtonContainer } from '../Str
 import { LessonList, LessonItem, LessonTitleChinese, LessonTitleEnglish } from '../Structures/StructuresContent.styles';
 import { GivingSuggestionsContent } from './GivingSuggestionsContent';
 import { MakingChoicesIndividualContent } from './MakingChoicesIndividualContent';
+import { GivingReasonsContent } from './GivingReasonsContent';
 
 const Container = styled.div``;
 
@@ -17,7 +18,7 @@ interface IndividualResponseContentProps {
     themeColor: string;
 }
 
-type View = 'list' | 'suggestions' | 'choices';
+type View = 'list' | 'suggestions' | 'choices' | 'reasons';
 
 export const IndividualResponseContent: React.FC<IndividualResponseContentProps> = ({ onBack, onReturn, themeColor }) => {
     const [view, setView] = useState<View>('list');
@@ -34,6 +35,10 @@ export const IndividualResponseContent: React.FC<IndividualResponseContentProps>
         return <MakingChoicesIndividualContent onBack={() => setView('list')} onReturn={onReturn} themeColor={themeColor} />;
     }
 
+    if (view === 'reasons') {
+        return <GivingReasonsContent onBack={() => setView('list')} onReturn={onReturn} themeColor="#f39c12" />;
+    }
+
     return (
         <Container>
             <BackButton onClick={onBack} themeColor={themeColor}>← Back to Skills Menu</BackButton>
@@ -46,6 +51,10 @@ export const IndividualResponseContent: React.FC<IndividualResponseContentProps>
                 <LessonItem borderColor={themeColor} onClick={() => setView('choices')}>
                     <LessonTitleChinese>Making and explaining choices</LessonTitleChinese>
                     <LessonTitleEnglish>做出和解释选择</LessonTitleEnglish>
+                </LessonItem>
+                <LessonItem borderColor={themeColor} onClick={() => setView('reasons')}>
+                    <LessonTitleChinese>Giving reasons</LessonTitleChinese>
+                    <LessonTitleEnglish>陈述理由</LessonTitleEnglish>
                 </LessonItem>
             </LessonList>
             <NextButtonContainer>
